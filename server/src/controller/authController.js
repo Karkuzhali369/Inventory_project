@@ -1,7 +1,25 @@
 import jwt from 'jsonwebtoken';
 
 import { response } from '../utils/response.js';
-import { createUserService, loginUserService, updateUserService, deleteUserService } from '../service/authService.js';
+import { getUserService, createUserService, loginUserService, updateUserService, deleteUserService } from '../service/authService.js';
+
+export const getAllUser = async (req, res) => {
+    if(req.user.role !== 'ADMIN') {
+        return res.status(401).send(response('FAILED', 'Admin only able to create user!', null));
+    }
+    try {
+        const result = await getUserService();
+        if(result.status === 500) {
+            return res.status(500).send(response('FAILED', result.message, null));
+        }
+        else if(result.status === 200) {
+            return res.status(200).send(response('SUCCESS', result.message, { users: result.users }));
+        }
+    }
+    catch(err) {
+        return res.status(500).send(response('FAILED', err.message, null));
+    }
+}
 
 export const createUser = async (req, res) => {
     if(req.user.role !== 'ADMIN') {
@@ -53,11 +71,11 @@ export const loginUser = async (req, res) => {
         }
         else if(result.status === 200) {
             const payload = {
-                userId: result.userId,
-                role: result.role
+                userId: result.user.userId,
+                role: result.user.role
             };
             const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '365d'});
-            return res.status(200).send(response('SUCCESS', result.message, { jwtToken: token, userId: result.userId }));
+            return res.status(200).send(response('SUCCESS', result.message, { jwtToken: token, user: result.user }));
         }
     }
     catch(err) {

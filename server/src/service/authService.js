@@ -1,6 +1,16 @@
 import User from '../model/userModel.js';
 import bcrypt from 'bcrypt';
 
+export const getUserService = async () => {
+    try {
+        const users = await User.find().select("-password");
+        return { status: 200, message: 'Get all user.', users };
+    } catch (err) {
+        return { status: 500, message: err.message };
+    }
+};
+
+
 export const createUserService = async (userName, password, role) => {
     try {
         const user = await User.findOne({ userName }).exec();
@@ -34,7 +44,11 @@ export const loginUserService = async (userName, password) => {
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if(isPasswordCorrect) {
-            return { status: 200, message: 'Login successfully.', userId: user._id, role: user.role };
+            return { status: 200, message: 'Login successfully.', user: {
+                userId: user._id,
+                userName: user.userName,
+                role: user.role
+            } };
         }
         else {
             return {status: 401, message: 'Invalid password'};
