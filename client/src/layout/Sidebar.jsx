@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -17,6 +17,7 @@ const Sidebar = () => {
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>View</li>
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Stocks</li>
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Admin Panel</li>
+                <Link to='/product-management' className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Product Management</Link>
                 <li onClick={() => handleLogout()} className='hover:bg-red-700 bg-red-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Log Out</li>
             </ul>
         </aside>

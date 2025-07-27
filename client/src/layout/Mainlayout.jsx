@@ -27,7 +27,7 @@ const Mainlayout = () => {
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-64px)] px-4">
+                <div className="min-h-[calc(100vh-64px)] w-full">
                     <Outlet />
                 </div>
             </div>
