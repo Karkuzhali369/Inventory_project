@@ -11,7 +11,7 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className='backdrop-blur-lg bg-blue-600/90 text-white w-64 h-screen shadow-lg'>
+        <aside className='backdrop-blur-lg bg-blue-600/90 text-white h-full shadow-lg px-2'>
             <ul className='px-5 py-3 space-y-5 flex flex-col h-full'>
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Home</li>
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>View</li>

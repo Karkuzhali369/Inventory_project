@@ -11,25 +11,17 @@ const Mainlayout = () => {
     };
 
     return (
-        <div className='flex flex-col h-screen'>
-            <Navbar toggleSideOpen={toggleSideOpen} />
-            <div className='flex flex-1'>
-                {/* Desktop Sidebar */}
-                <div className='hidden lg:block'>
-                    <Sidebar />
-                </div>
+        <div className='h-[100dvh] grid grid-cols-1 md:grid-cols-[20%_80%] grid-rows-[auto_1fr] dark:bg-slate-950 max-md:relative'>
+            <div className="col-span-1 md:col-span-3">
+                <Navbar toggleSideOpen={toggleSideOpen} />
+            </div>
 
-                {/* Mobile Sidebar (Slide-in) */}
-                <div className={`transform bg-blue-600 text-white shadow-lg
-                    transition-transform duration-300
-                    ${sideOpen ? 'translate-x-0' : '-translate-x-full'} lg:hidden`}>
-                    <Sidebar />
-                </div>
+            <div className={`max-md:z-20 md:block overflow-y-hidden bg-white dark:bg-slate-950 ${sideOpen ? 'max-md:fixed' : 'max-md:hidden'} max-md:h-[calc(100dvh-3.5rem)] max-md:bottom-0`}>
+                <Sidebar />
+            </div>
 
-                {/* Main Content */}
-                <div className="min-h-[calc(100vh-64px)] w-full">
-                    <Outlet />
-                </div>
+            <div className="overflow-y-hidden">
+                <Outlet />
             </div>
         </div>
     );
