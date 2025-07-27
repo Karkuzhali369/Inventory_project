@@ -17,26 +17,29 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ userName: username, password }),
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
-        localStorage.setItem("Token", data.token);
+        localStorage.setItem("Token", data.data.jwtToken);
+        localStorage.setItem("UserId", data.data.user.userId);
+        localStorage.setItem("UserName", data.data.user.userName);
+        localStorage.setItem("Role", data.data.user.role);
         navigate("/home");
       } else {
         alert(data.message || "Login failed");
       }
     } catch (error) {
-      console.error("Login Error:", error);
+      console.error("Login Error:", error.message);
       alert("Something went wrong. Please try again.");
     }
   };

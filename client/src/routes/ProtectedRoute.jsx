@@ -1,26 +1,29 @@
-
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { isLoggedIn } from "../utils/auth";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = () => {
   const [isAuth, setIsAuth] = useState(null); // null = still checking
 
   useEffect(() => {
     (async () => {
-      const result = await isLoggedIn(true);
+      const result = await isLoggedIn(true); // Check login status
       setIsAuth(result); // true or false
     })();
   }, []);
 
-  // While checking, show nothing or a loading spinner
-  if (isAuth === null) return null;
+  // Show a loader while checking authentication
+  if (isAuth === null) {
+    return <div>Loading...</div>;
+  }
 
   // Not logged in → redirect to login
-  if (!isAuth) return <Navigate to="/login" replace />;
+  if (!isAuth) {
+    return <Navigate to="/login" replace />;
+  }
 
-  // Logged in → show protected page
-  return children;
+  // Logged in → render nested route (e.g., /home)
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
