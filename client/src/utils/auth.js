@@ -1,33 +1,21 @@
-import { jwtDecode } from 'jwt-decode';
-import { toast } from 'react-toastify';
-
 export function getToken() {
-  return localStorage.getItem('token');
+  return localStorage.getItem("Token");
 }
 
-export function isLoggedIn(showToast = false) {
-  const token = getToken();
-
+export async function isLoggedIn() {
+  const token = localStorage.getItem("Token");
   if (!token) return false;
 
   try {
-    const decoded = jwtDecode(token);
-    const currentTime = Date.now() / 1000;
+    const response = await fetch("http://localhost:5000/api/verifyToken", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    console.log("🔍 Decoded token:", decoded);
-    console.log("⏳ Current time:", currentTime);
-    console.log("📅 Token expiry:", decoded.exp);
-
-    if (decoded.exp && decoded.exp < currentTime) {
-      localStorage.removeItem("token");
-      if (showToast) toast.error("Session expired.");
-      return false;
-    }
-
-    return true;
-  } catch (err) {
-    localStorage.removeItem("token");
-    if (showToast) toast.error("Invalid token.");
+    return response.ok; // true if token is valid
+  } catch {
     return false;
   }
 }

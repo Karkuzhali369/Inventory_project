@@ -4,7 +4,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     navigate("/login");
   };
 
@@ -15,7 +15,7 @@ const Home = () => {
       </h1>
       <button
         onClick={handleLogout}
-        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all duration-200 font-semibold shadow-sm"
       >
         Logout
       </button>
