@@ -54,7 +54,7 @@ function AdminPanel() {
 
       const result = await response.json();
 
-      console.log(result);//added new line
+      console.log(result);//added new
 
       if (response.status === 200) {
         setEditUserId(null);
