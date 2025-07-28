@@ -16,8 +16,10 @@ const Sidebar = () => {
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Home</li>
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>View</li>
                 <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Stocks</li>
-                <li className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Admin Panel</li>
+
                 <Link to='/product-management' className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Product Management</Link>
+                <Link to='/admin-panel' className='hover:bg-blue-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Admin Panel</Link>
+    
                 <li onClick={() => handleLogout()} className='hover:bg-red-700 bg-red-500 cursor-pointer rounded-xl px-4 py-2 transition duration-300'>Log Out</li>
             </ul>
         </aside>
