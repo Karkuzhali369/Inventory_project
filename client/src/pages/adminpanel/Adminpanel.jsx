@@ -4,10 +4,15 @@ function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [editUserId, setEditUserId] = useState(null);
   const [editedUser, setEditedUser] = useState({});
+  const token = localStorage.getItem("Token");
 
   const fetchUsers = async () => {
+    
     try {
-      const response = await fetch("http://localhost:5000/api/auth/get-all-users");
+      const response = await fetch("http://localhost:5000/api/auth/get-all-users", {
+        headers: {
+        Authorization: `Bearer ${token}`,
+      }});
       const result = await response.json();
       if (response.status === 200 && result.condition === "SUCCESS") {
         setUsers(result.data.users);
@@ -48,7 +53,9 @@ function AdminPanel() {
 
       const response = await fetch("http://localhost:5000/api/auth/update-user", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify(payload),
       });
 
