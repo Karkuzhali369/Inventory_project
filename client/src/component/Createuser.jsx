@@ -34,7 +34,8 @@ function Createuser({ onClose, onUserCreated }) {
         alert("User created successfully");
         onUserCreated(result.data.user); // Notify parent
         onClose(); // Close modal
-      } else {
+      }
+      else {
         alert(result.message || "Failed to create user");
       }
     } catch (err) {

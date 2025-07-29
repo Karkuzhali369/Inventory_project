@@ -121,6 +121,7 @@ function AdminPanel() {
 };
 
 const handleUserCreated = (newUser) => {
+  newUser._id = newUser.userId;
   setUsers((prev) => [...prev, newUser]);
 };
 
