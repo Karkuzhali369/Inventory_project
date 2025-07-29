@@ -26,17 +26,20 @@ const Navbar = ({ toggleSideOpen }) => {
 
 
     return (
-            <header className='bg-blue-600 text-white p-4 shadow-md'>
-                <div className='flex justify-between items-center'>
-                    <div className='flex items-center space-x-4'>
-                        <button onClick={toggleSideOpen} className='mx-2 lg:hidden text-white text-2xl cursor-pointer' >☰</button>
-                        <h1 className='text-2xl sm:text-2xl font-bold'>Balaram Electricals and Hardwares</h1>
-                    </div>
-                    <div className='text-sm md:text-base font-medium bg-blue-400 p-2 rounded-md drop-shadow-lg'>
-                        {formattedDate} {formattedTime}
-                    </div>
+            <header className='bg-blue-600 text-white shadow-md h-[4.5rem] flex justify-between items-center px-2 md:px-4'>
+                <div className='flex items-center space-x-4'>
+                    <button onClick={toggleSideOpen} className='mx-2 lg:hidden text-white text-2xl cursor-pointer' >☰</button>
+                    <h1 className='text-2xl max-md:text-[16px] font-bold'>Balaram Electricals and Hardwares</h1>
                 </div>
+                <div className='text-sm md:text-base font-medium bg-blue-400 p-2 rounded-md drop-shadow-lg flex justify-center items-center max-md:flex-col max-md:w-[8rem]'>
+                    <p>
+                        {formattedDate} 
+                    </p>
+                    <p>
+                        {formattedTime}
 
+                    </p>
+                </div>
             </header>
     )
 }
