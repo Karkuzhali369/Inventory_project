@@ -128,7 +128,7 @@ const handleUserCreated = (newUser) => {
 
 
   return (
-            <div className="max-w-4xl mx-auto mt-12 p-4 bg-white shadow-md rounded">
+        <div className="max-w-4xl mx-auto mt-12 p-4 bg-white shadow-md rounded">
           <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">All Users</h2>
           <table className="w-full table-auto border border-gray-300">
                 <thead className="bg-blue-600">
