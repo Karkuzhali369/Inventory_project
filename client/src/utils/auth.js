@@ -7,7 +7,7 @@ export async function isLoggedIn() {
   if (!token) return false;
 
   try {
-    const response = await fetch("http://192.168.1.8:5000/api/auth/verify-token", {
+    const response = await fetch("http://localhost:5000/api/auth/verify-token", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
