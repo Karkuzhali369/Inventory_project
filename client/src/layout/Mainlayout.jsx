@@ -16,7 +16,9 @@ const Mainlayout = () => {
                 <Navbar toggleSideOpen={toggleSideOpen} />
             </div>
 
+
             <div className={`max-md:z-20 md:block overflow-y-hidden bg-white ${sideOpen ? 'max-md:fixed' : 'max-md:hidden'} max-md:h-[calc(100dvh-3.5rem)] max-md:bottom-0`}>
+
                 <Sidebar />
             </div>
 
