@@ -4,7 +4,6 @@ import { addProductService, updateProductService, deleteProductService, getProdu
 
 export const addProduct = async (req, res) => {
     const { role } = req.user;
-    console.log(req.user)
 
     if(role !== 'ADMIN' && role !== 'MODERATOR') {
         return res.status(403).send(response('FAILED', 'You dont have enough perimission.', null));

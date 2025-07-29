@@ -1,12 +1,17 @@
 import Product from '../model/productModel.js'
 
-export const addProductService = async ({ productName, category, currentQuantity, unit, minQuantity }) => {
+export const addProductService = async ({ code, productName, size=null, category, material=null, make=null, currentQuantity, unit, price, minQuantity }) => {
     try {
-        const product = await new Product({
+        const product = new Product({
+            code,
             productName,
+            size,
             category,
+            material,
+            make,
             currentQuantity,
             unit,
+            price,
             minQuantity
         });
         await product.save();
@@ -17,17 +22,25 @@ export const addProductService = async ({ productName, category, currentQuantity
     }
 }
 
-export const updateProductService = async ({ productId, productName, category, unit, minQuantity }) => {
+export const updateProductService = async ({ productId, code, productName, size, category, material, make, currentQuantity, unit, price, minQuantity }) => {
     try {
+        const updateFields = {};
+
+        if (code !== undefined) updateFields.code = code;
+        if (productName !== undefined) updateFields.productName = productName;
+        if (size !== undefined) updateFields.size = size;
+        if (category !== undefined) updateFields.category = category;
+        if (material !== undefined) updateFields.material = material;
+        if (make !== undefined) updateFields.make = make;
+        if (currentQuantity !== undefined) updateFields.currentQuantity = currentQuantity;
+        if (unit !== undefined) updateFields.unit = unit;
+        if (price !== undefined) updateFields.price = price;
+        if (minQuantity !== undefined) updateFields.minQuantity = minQuantity;
+
         const updatedProduct = await Product.findByIdAndUpdate(
             productId,
-            {
-                $set: { productName, category, unit, minQuantity }
-            },
-            {
-                new: true,
-                runValidators: true,
-            }
+            { $set: updateFields },
+            { new: true, runValidators: true }
         ).exec();
 
         if (!updatedProduct) {
@@ -35,11 +48,11 @@ export const updateProductService = async ({ productId, productName, category, u
         }
 
         return { status: 200, message: "Product updated successfully.", product: updatedProduct };
-    }
-    catch (err) {
+    } catch (err) {
         return { status: 500, message: err.message };
     }
 };
+
 
 export const deleteProductService = async (productId) => {
     try {
