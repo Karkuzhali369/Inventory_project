@@ -25,7 +25,7 @@ export const createUser = async (req, res) => {
     if(req.user.role !== 'ADMIN') {
         return res.status(401).send(response('FAILED', 'Admin only able to create user!', null));
     }
-    const { userName, password, role } = req.body;
+    const { userName="", password="", role="" } = req.body;
     if(!userName.trim()) {
         return res.status(400).send(response('FAILED', 'Please enter your username.', null));
     }
@@ -54,7 +54,7 @@ export const createUser = async (req, res) => {
 }
 
 export const loginUser = async (req, res) => {
-    const { userName, password } = req.body;
+    const { userName="", password="" } = req.body;
     
     if(!userName.trim()) {
         return res.status(400).send(response('FAILED', 'Please enter your username.', null));
