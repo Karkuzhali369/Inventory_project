@@ -4,7 +4,6 @@ import React, { useState } from "react";
 
 function Createuser({ onClose, onUserCreated }) {
   const token = localStorage.getItem("Token");
-  console.log("token:",token)
   const [formData, setFormData] = useState({
     userName: "",
     password: "",
@@ -28,13 +27,12 @@ function Createuser({ onClose, onUserCreated }) {
       });
 
       const result = await response.json();
-      console.log("raw response:",result);
 
       
 
       if (response.ok) {
         alert("User created successfully");
-        onUserCreated(result.user); // Notify parent
+        onUserCreated(result.data.user); // Notify parent
         onClose(); // Close modal
       } else {
         alert(result.message || "Failed to create user");

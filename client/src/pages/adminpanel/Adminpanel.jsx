@@ -97,11 +97,13 @@ function AdminPanel() {
   if (!confirmDelete) return;
 
   try {
-    const response = await fetch(`http://localhost:5000/api/auth/delete-user/${userId}`, {
+    const response = await fetch(`http://localhost:5000/api/auth/delete-user`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${token}`,
-      }
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({userId: userId})
     });
 
     const result = await response.json();
