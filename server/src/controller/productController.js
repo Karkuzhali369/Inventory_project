@@ -1,6 +1,6 @@
 import { response } from "../utils/response.js";
 
-import { addProductService, updateProductService, deleteProductService, getProductsService } from "../service/productService.js";
+import { addProductService, updateProductService, deleteProductService, getProductsService, getCategoryService } from "../service/productService.js";
 
 export const addProduct = async (req, res) => {
     const { role } = req.user;
@@ -62,11 +62,25 @@ export const deleteProduct = async (req, res) => {
 }
 
 export const getProduct = async (req, res) => {
-    // GET /api/products?page=2&limit=25&search=milk&category=dairy&sortBy=productName&order=asc
     try {
         const result = await getProductsService(req.query);
         if(result.status === 200) {
             return res.status(200).send(response('SUCCESS', result.message, { products: result.data, paging: result.pagination }));
+        }
+        else {
+            return res.status(result.status).send(response('FAILED', result.message, null));
+        }
+    }
+    catch(err) {
+        return res.status(500).send(response('FAILED', err.message, null));
+    }
+}
+
+export const getCategory = async (req, res) => {
+    try {
+        const result = await getCategoryService(req.query);
+        if(result.status === 200) {
+            return res.status(200).send(response('SUCCESS', result.message, { categories: result.categories }));
         }
         else {
             return res.status(result.status).send(response('FAILED', result.message, null));

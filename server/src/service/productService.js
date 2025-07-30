@@ -112,3 +112,8 @@ export const getProductsService = async ({ page = 1, limit = 30, search = "", ca
         return { status: 500, message: err.message };
     }
 };
+
+export const getCategoryService = async () => {
+    const categories = await Product.distinct("category");
+    return { status: 200, message: 'Category received.', categories: categories };
+}
