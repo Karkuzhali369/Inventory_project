@@ -22,7 +22,7 @@ const Mainlayout = () => {
                 <Sidebar />
             </div>
 
-            <div className="overflow-y-hidden">
+            <div className="overflow-y-scroll">
                 <Outlet />
             </div>
         </div>
