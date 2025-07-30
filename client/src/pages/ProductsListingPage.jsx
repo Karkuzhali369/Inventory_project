@@ -163,4 +163,4 @@ const ProductsListingPage = () => {
     )
 }
 
-export default ProductsListingPage
+export default ProductsListingPage;

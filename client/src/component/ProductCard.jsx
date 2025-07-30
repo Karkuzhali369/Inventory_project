@@ -28,6 +28,9 @@ const ProductCard = ({ product }) => {
                     {product.make && (
                         <div>Make:<strong> {product.make}</strong></div>
                     )}
+                    {
+                        <div>Price:<strong> $10.0</strong></div>
+                    }
                 </div>
             </div>
         </div>
