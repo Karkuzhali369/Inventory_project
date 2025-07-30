@@ -1,7 +1,8 @@
+import One from "./testing/one";
 
 const StatisticsPage = () => {
     return (
-        <div>StatisticsPage</div>
+        <One />
     )
 }
 
