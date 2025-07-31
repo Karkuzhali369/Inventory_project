@@ -35,6 +35,7 @@ const Navbar = ({ toggleSideOpen }) => {
                     <p>
                         {formattedDate} 
                     </p>
+                    &nbsp;&nbsp;&nbsp;
                     <p>
                         {formattedTime}
 

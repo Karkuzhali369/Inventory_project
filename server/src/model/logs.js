@@ -24,7 +24,7 @@ const logsSchema = mongoose.Schema({
         required: true
     },
     dateAndTime: {
-        type: String,
+        type: Date,
         required: true
     }
 }, { timestamps: true });
