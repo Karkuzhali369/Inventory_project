@@ -1,4 +1,6 @@
+import crypto from 'crypto';
 import Product from '../model/productModel.js'
+import Logs from '../model/logs.js';
 
 export const addProductService = async ({ code, productName, size=null, category, material=null, make=null, currentQuantity, unit, price, minQuantity }) => {
     try {
@@ -117,3 +119,101 @@ export const getCategoryService = async () => {
     const categories = await Product.distinct("category");
     return { status: 200, message: 'Category received.', categories: categories };
 }
+
+export const stockAdditionService = async (userId, { stocks }) => {
+    if (!stocks?.length) return { status: 400, message: 'No stock items provided.' };
+
+    const now = new Date();
+    const reference = crypto.randomUUID();
+
+    try {
+        for (const stock of stocks) {
+            const product = await Product.findById(stock.productId);
+            if (!product) {
+                console.warn(`Product not found for ID: ${stock.productId}`);
+                continue;
+            }
+
+            const valueToAdd = Number(stock.value);
+            if (isNaN(valueToAdd)) {
+                console.warn(`Invalid stock value: ${stock.value}`);
+                continue;
+            }
+
+            product.currentQuantity = (Number(product.currentQuantity) || 0) + valueToAdd;
+            product.lastModified = now;
+
+            await Logs.create({
+                productId: product._id,
+                userId,
+                reference,
+                quantity: valueToAdd,
+                isAdded: true,
+                dateAndTime: now
+            });
+
+            await product.save();
+        }
+
+        return { status: 200, message: 'Stock successfully added.' };
+    }
+    catch (err) {
+        return { status: 500, message: err.message };
+    }
+};
+
+ 
+export const stockEntryService = async (userId, { stocks }) => {
+    if (!stocks?.length) return { status: 400, message: 'No stock items provided.' };
+
+    const now = new Date();
+    const reference = crypto.randomUUID();
+    const warning = [];
+
+    try {
+        for (const stock of stocks) {
+            const product = await Product.findById(stock.productId);
+            if (!product) {
+                console.warn(`Product not found for ID: ${stock.productId}`);
+                continue;
+            }
+
+            const valueToSub = Number(stock.value);
+            if (isNaN(valueToSub)) {
+                console.warn(`Invalid stock value: ${stock.value}`);
+                continue;
+            }
+
+            product.currentQuantity = Number(product.currentQuantity) || 0;
+
+            if (product.currentQuantity < valueToSub) {
+                warning.push({
+                    productName: product.productName,
+                    productId: product._id,
+                    currentQuantity: product.currentQuantity,
+                    entry: valueToSub
+                });
+                continue;
+            }
+
+            product.currentQuantity -= valueToSub;
+            product.lastModified = now;
+
+            await Logs.create({
+                productId: product._id,
+                userId,
+                reference,
+                quantity: valueToSub,
+                isAdded: false,
+                dateAndTime: now
+            });
+
+            await product.save();
+        }
+
+        return { status: 200, message: 'Stock successfully entered.', warning };
+    }
+    catch (err) {
+        return { status: 500, message: err.message };
+    }
+};
