@@ -18,6 +18,7 @@ const productSchema = new mongoose.Schema({
 productSchema.index({ code: 1 });
 productSchema.index({ productName: 1 });
 productSchema.index({ category: 1 });
+productSchema.index({ currentQuantity: 1 });
 productSchema.index({ lastModified: -1 });
 productSchema.index({ category: 1, productName: 1 });
 
