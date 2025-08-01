@@ -77,11 +77,11 @@ const StockAddedList = ({ setAdditionListPopup }) => {
                 }
                 </ul>
 
-                <div className="text-right mt-4">
-                    <button onClick={() => setAdditionListPopup(false)} className="bg-gray-400 text-white px-4 py-2 rounded">
+                <div className="text-right mt-4 p-1">
+                    <button onClick={() => setAdditionListPopup(false)} className="bg-gray-400 text-white px-4 py-2 ml-1 rounded">
                         Close
                     </button>
-                    <button onClick={() => addAddedList()}>
+                    <button onClick={() => addAddedList()} className="bg-green-500 text-white px-4 py-2 ml-2 rounded">
                         save
                     </button>
                 </div>

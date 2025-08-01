@@ -56,14 +56,18 @@ function Createuser({ onClose, onUserCreated }) {
           value={formData.userName}
           onChange={handleChange}
         />
-        <input
-          type="text"
+        <select
           name="role"
-          placeholder="Role"
           className="w-full mb-2 p-2 border rounded"
           value={formData.role}
           onChange={handleChange}
-        />
+        >
+          <option value="">Select Role</option>
+          <option value="ADMIN">Admin</option>
+          <option value="MODERATOR">Moderator</option>
+          <option value="USER">User</option>
+        </select>
+
         <input
           type="password"
           name="password"
