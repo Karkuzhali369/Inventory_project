@@ -56,7 +56,7 @@ const ProductManagementPage = () => {
         setLoading(true);
         const token = localStorage.getItem("Token");
         try {
-        const res = await fetch(`http://localhost:5000/api/product/get-product?page=${page}&limit=${limit}&search=${search}&category=${selectedCategory}&sortBy=${sortBy}&order=${sortOrder}`, {
+        const res = await fetch(`http://localhost:5000/api/product/get-product?page=${page}&limit=${limit}&search=${search.trim()}&category=${selectedCategory}&sortBy=${sortBy}&order=${sortOrder}`, {
             headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const Mainlayout = () => {
     const [sideOpen, setSideOpen] = useState(false);
@@ -9,6 +9,12 @@ const Mainlayout = () => {
     const toggleSideOpen = () => {
         setSideOpen(!sideOpen);
     };
+    const location = useLocation();
+
+    useEffect(() => {
+        setSideOpen(false);
+    }, [location.pathname]);
+
 
     return (
         <div className='h-[100dvh] grid grid-cols-1 md:grid-cols-[20%_80%] grid-rows-[auto_1fr] max-md:relative'>

@@ -11,16 +11,13 @@ const ProductCard = ({ product }) => {
                 <div><span>Code:</span> <strong>{product.code}</strong></div>
                 <div><span>Name:</span> <strong>{product.productName}</strong></div>
                 <div><span>Category:</span> <strong>{product.category}</strong></div>
-                <div><span>Quantity:</span><strong>{product.currentQuantity}</strong></div>
+                <div><span>Quantity:</span><strong>{product.currentQuantity}&nbsp;{product.unit}</strong></div>
             </div>
             <div
                 className={`overflow-hidden transition-all duration-400 ease-in-out ${expanded ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0'
                     }`}
             >
                 <div className="flex flex-wrap gap-2 space-y-[-8px] md:space-y-0 md:gap-5 text-sm text-blue-700">
-                    {product.unit && (
-                        <div>Unit:<strong> {product.unit} </strong></div>
-                    )}
                     {product.material && (
                         <div>Material:<strong> {product.material}</strong></div>
                     )}
