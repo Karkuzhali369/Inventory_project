@@ -166,7 +166,7 @@ const ProductsListingPage = () => {
             {page < totalPages && (
                 <div className='text-center mb-6'>
                 <button
-                    onClick={getMore}
+                    onClick={() => getMore()}
                     className='bg-blue-600 hover:bg-blue-800 transition-all px-4 py-2 rounded-full text-white font-bold cursor-pointer'
                 >
                     Load more products

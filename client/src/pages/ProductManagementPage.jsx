@@ -11,8 +11,8 @@ const ProductRow = ({ product, onEdit, onDelete }) => (
     <td className="py-2 px-4 border-b">₹{product.price}</td>
     <td className="py-2 px-4 border-b">{product.currentQuantity}&nbsp;{product.unit}</td>
     <td className="py-2 px-4 border-b space-x-2">
-      <button onClick={() => onEdit(product)} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded shadow-md">Edit</button>
-      <button onClick={() => onDelete(product)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded shadow-md">Delete</button>
+      <button onClick={() => onEdit(product)} className="bg-yellow-400 hover:bg-yellow-500 cursor-pointer text-white py-1 px-3 rounded shadow-md">Edit</button>
+      <button onClick={() => onDelete(product)} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white py-1 px-3 rounded shadow-md">Delete</button>
     </td>
   </tr>
 );
@@ -239,12 +239,12 @@ useEffect(() => {
                 id="sortBy"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
+                className="appearance-none border cursor-pointer border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
             >
                 <option value="productName">Product Name</option>
                 <option value="currentQuantity">Quantity</option>
             </select>
-            <button onClick={handleOrder} className="bg-blue-600 p-2 rounded-md hover:bg-blue-800 transition-all shrink-0">
+            <button onClick={handleOrder} className="bg-blue-600 cursor-pointer p-2 rounded-md hover:bg-blue-800 transition-all shrink-0">
                 <img src={arrowIcon} alt="Sort Order" className={`w-4 invert transition-transform duration-200 ${sortOrder === 'asc' ? '-rotate-90' : 'rotate-90'}`} />
             </button>
             </div>
@@ -256,7 +256,7 @@ useEffect(() => {
                 id="category"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="appearance-none border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
+                className="appearance-none cursor-pointer border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
             >
                 {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -267,7 +267,7 @@ useEffect(() => {
 
         {/* ADD/EDIT BUTTON */}
         <div className="flex justify-end mb-4">
-            <button onClick={openAddModal} className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded shadow-lg transition-all duration-200">
+            <button onClick={openAddModal} className="bg-green-500 cursor-pointer hover:bg-green-600 text-white py-2 px-6 rounded shadow-lg transition-all duration-200">
             + Add Product
             </button>
         </div>
@@ -301,9 +301,9 @@ useEffect(() => {
 
         {/* Pagination */}
         <div className="flex justify-between mt-6">
-            <button onClick={() => setPage(p => Math.max(p - 1, 1))} disabled={page === 1} className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300">Prev</button>
+            <button onClick={() => setPage(p => Math.max(p - 1, 1))} disabled={page === 1} className="px-4 py-2 bg-blue-600 hover:bg-blue-800 transition-all text-white rounded disabled:bg-gray-300 cursor-pointer">Prev</button>
             <span className="px-4 py-2">Page {page}</span>
-            <button onClick={() => setPage(p => p + 1)} className="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+            <button onClick={() => setPage(p => p + 1)} className="px-4 cursor-pointer py-2 bg-blue-600 text-white rounded hover:bg-blue-800 transition-all">Next</button>
         </div>
 
         {/* Modals */}
