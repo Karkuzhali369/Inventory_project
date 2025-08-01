@@ -1,6 +1,6 @@
 import { response } from "../utils/response.js";
 
-import { addProductService, updateProductService, deleteProductService, getProductsService, getCategoryService, stockAdditionService, stockEntryService } from "../service/productService.js";
+import { addProductService, updateProductService, deleteProductService, getProductsService, getCategoryService, stockAdditionService, stockEntryService, getStatisticsService } from "../service/productService.js";
 
 export const addProduct = async (req, res) => {
     const { role } = req.user;
@@ -119,4 +119,24 @@ export const stockEntry = async (req, res) => {
     catch(err) {
         return res.status(500).send(response('FAILED', err.message, null));
     }
+}
+
+export const getStatistics = async (req, res) => {
+    try {
+        const result = await getStatisticsService();
+        if(result.status === 200) {
+            return res.status(200).send(response('SUCCESS', result.message, {
+                overviewStats: result.overviewStats,
+                stockByCategory: result.stockByCategory,
+                lastThreeMonthData: result.lastThreeMonthData,
+                lastEightWeekSale: result.lastEightWeekSale
+            }));
+        }
+        else {
+            return res.status(result.status).send(response('FAILED', result.message, null));
+        }
+    }
+    catch(err) {
+        return res.status(500).send(response('FAILED', err.message, null));
+    }   
 }
