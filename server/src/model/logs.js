@@ -6,6 +6,15 @@ const logsSchema = mongoose.Schema({
         ref: 'Product',
         required: true
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    reference: {
+        type: String,
+        required: true
+    },
     quantity: {
         type: Number,
         required: true
@@ -16,7 +25,7 @@ const logsSchema = mongoose.Schema({
     },
     dateAndTime: {
         type: Date,
-        default: Date.now
+        required: true
     }
 }, { timestamps: true });
 

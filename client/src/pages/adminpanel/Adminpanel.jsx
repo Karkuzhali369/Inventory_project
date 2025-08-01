@@ -128,16 +128,17 @@ const handleUserCreated = (newUser) => {
 
 
   return (
-            <div className="max-w-4xl mx-auto mt-12 p-4 bg-white shadow-md rounded">
-          <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">All Users</h2>
-          <table className="w-full table-auto border border-gray-300">
-                <thead className="bg-blue-600">
+        <div className="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+          <h2 className=" bg-white shadow-md rounded-lg text-blue-800 text-xl p-3 font-bold">All Users</h2>
+          <table className="table-fixed min-w-full text-sm sm:text-base border border-gray-300">
+                <thead className="bg-blue-600 text-white">
                   <tr>
-                    <th className="border px-4 py-2 text-white">Username</th>
-                    <th className="border px-4 py-2 text-white">Role</th>
-                    <th className="border px-4 py-2 text-white">Password</th>
-                    <th className="border px-4 py-2 text-white"></th>
-                    <th className="border px-4 py-2 text-white"></th>
+                    <th className="w-[25%] border px-4 py-2 whitespace-nowrap">Username</th>
+                    <th className="w-[25%]border px-4 py-2 whitespace-nowrap ">Role</th>
+                    <th className="w-[20%] border px-4 py-2 whitespace-nowrap ">Password</th>
+                    <th className="w-[15%] border px-4 py-2 "></th>
+                    <th className="w-[15%] border px-4 py-2 "></th>
+                    
 
                   </tr>
                 </thead>
@@ -147,14 +148,14 @@ const handleUserCreated = (newUser) => {
                     return (
                       <tr key={user._id} className="text-center">
                         {/* Username */}
-                        <td className="border px-4 py-2">
+                        <td className="border px-4 py-2 break-words">
                           {isEditing ? (
                             <input
                               type="text"
                               name="userName"
                               value={editedUser.userName}
                               onChange={handleInputChange}
-                              className="border px-2 py-1 w-full"
+                              className="border px-2 py-1 w-full text-xs sm:text-sm"
                             />
                           ) : (
                             user.userName
@@ -162,17 +163,17 @@ const handleUserCreated = (newUser) => {
                         </td>
 
                         {/* Custom Dropdown Role */}
-                        <td className="border px-4 py-2 relative">
+                        <td className="border px-4 py-2 break-words">
                           {isEditing ? (
-                            <div className="relative inline-block w-full">
+                            <div className="relative">
                               <button
                                 onClick={toggleDropdown}
-                                className="w-full text-left border px-2 py-1 bg-white"
+                                className="w-full text-left border px-2 py-1 bg-white text-xs sm:text-sm"
                               >
                                 {editedUser.role}
                               </button>
                               {editedUser.showDropdown && (
-                                <ul className="absolute bg-white border mt-1 w-full z-10">
+                                <ul className="absolute bg-white border mt-1 w-full z-10 text-xs sm:text-sm">
                                   {["ADMIN", "MODERATOR", "USER"].map((role) => (
                                     <li
                                       key={role}
@@ -191,14 +192,14 @@ const handleUserCreated = (newUser) => {
                         </td>
 
                         {/* Password input */}
-                        <td className="border px-4 py-2">
+                        <td className="border px-4 py-2 break-words">
                           {isEditing ? (
                             <input
                               type="password"
                               name="password"
                               value={editedUser.password}
                               onChange={handleInputChange}
-                              className="border px-2 py-1 w-full"
+                              className="border px-2 py-1 w-full text-xs sm:text-sm"
                               placeholder="New password"
                             />
                           ) : (
@@ -207,27 +208,27 @@ const handleUserCreated = (newUser) => {
                         </td>
 
                         {/* Edit/Save button */}
-                        <td className="border px-4 py-2">
+                        <td className="border px-2 py-2">
                           {isEditing ? (
                             <button
                               onClick={handleSaveClick}
-                              className="bg-green-500 text-white px-4 py-1 rounded"
+                              className="bg-green-500 text-white px-4 py-1 rounded text-xs sm:text-sm"
                             >
                               Save
                             </button>
                           ) : (
                             <button
                               onClick={() => handleEditClick(user)}
-                              className="bg-blue-500 text-white px-4 py-1 rounded"
+                              className="bg-blue-500 text-white px-4 py-1 rounded text-xs sm:text-sm"
                             >
                               Edit
                             </button>
                           )}
                         </td>
-                        <td className="border px-4 py-2">
+                        <td className="border px-2 py-2">
                             <button
                              onClick={()=>handleDelete(user._id)}
-                             className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                             className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded text-xs sm:text-sm"
                              >Delete</button>
                         </td>
                       </tr>
@@ -239,7 +240,7 @@ const handleUserCreated = (newUser) => {
 
                 <button 
                 onClick={() => setShowModal(true)}
-                className="bg-blue-600 text-white px-4 py-1 rounded"
+                className=" mt-4 mb-4 flex justify-center sm:justify-start bg-blue-600 text-white px-4 py-1 rounded"
                 >
                 Add User
                 </button>
@@ -251,6 +252,7 @@ const handleUserCreated = (newUser) => {
                     onUserCreated={handleUserCreated}
                 />
                 )}
+                
         </div>
 );
 
