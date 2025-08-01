@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import bgImage from '../assets/logo1.png'; // Adjust this path as needed
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [lowStockCount, setLowStockCount] = useState(null);
@@ -32,10 +33,10 @@ const Home = () => {
       style={{ backgroundImage: `url(${bgImage})`,backgroundSize:'300px',backgroundRepeat:'no-repeat',backgroundPosition:'center', }}
     >
       <h1 className="text-2xl font-bold text-blue-700 mb-6 ">
-        Welcome {name} ,
+        Welcome {name}🙏
       </h1>
 
-      <div
+      <Link to='/view'
         className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24
                    text-3xl sm:text-4xl md:text-5xl
                    bg-red-600 text-white font-bold
@@ -46,7 +47,7 @@ const Home = () => {
       >
         {!lowStockCount || lowStockCount === 0 ? '!' : lowStockCount}
         <h1>!</h1>
-      </div>
+      </Link>
     </div>
   );
 };
