@@ -61,7 +61,6 @@ export const deleteProductService = async (productId) => {
             return { status: 404, message: 'Product not found.' };
         }
         else {
-            console.log(product)
             return { status: 200, message: 'Product deleted successfully.' };
         }
     }
