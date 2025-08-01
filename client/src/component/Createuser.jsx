@@ -16,7 +16,7 @@ function Createuser({ onClose, onUserCreated }) {
 
   const handleCreateUser = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/create-user", 
+      const response = await fetch("https://inventory-project-d3mr.onrender.com/api/auth/create-user", 
         {
         method: "POST",
         headers: { 

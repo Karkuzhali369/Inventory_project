@@ -56,7 +56,7 @@ const ProductManagementPage = () => {
         setLoading(true);
         const token = localStorage.getItem("Token");
         try {
-        const res = await fetch(`http://localhost:5000/api/product/get-product?page=${page}&limit=${limit}&search=${search.trim()}&category=${selectedCategory}&sortBy=${sortBy}&order=${sortOrder}`, {
+        const res = await fetch(`https://inventory-project-d3mr.onrender.com/api/product/get-product?page=${page}&limit=${limit}&search=${search.trim()}&category=${selectedCategory}&sortBy=${sortBy}&order=${sortOrder}`, {
             headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ const ProductManagementPage = () => {
         const fetchCategory = async () => {
             const token = localStorage.getItem("Token");
             try {
-                const response = await fetch('http://localhost:5000/api/product/get-category', {
+                const response = await fetch('https://inventory-project-d3mr.onrender.com/api/product/get-category', {
                     method: 'GET',
                     headers: {
                     'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const ProductManagementPage = () => {
     const confirmDelete = async () => {
         const token = localStorage.getItem("Token");
         try {
-        const res = await fetch(`http://localhost:5000/api/product/delete-product`, {
+        const res = await fetch(`https://inventory-project-d3mr.onrender.com/api/product/delete-product`, {
             method: "DELETE",
             headers: {
             "Content-Type": "application/json",
@@ -168,8 +168,8 @@ const ProductManagementPage = () => {
         };
 
         const endpoint = isEditing
-        ? `http://localhost:5000/api/product/modify-product`
-        : `http://localhost:5000/api/product/add-product`;
+        ? `https://inventory-project-d3mr.onrender.com/api/product/modify-product`
+        : `https://inventory-project-d3mr.onrender.com/api/product/add-product`;
 
         const method = isEditing ? "PUT" : "POST";
         const body = isEditing ? { productId: selectedProduct._id, ...newProduct } : newProduct;

@@ -29,7 +29,7 @@ const StockAddedList = ({ setAdditionListPopup }) => {
         });
         try {
             const token = localStorage.getItem('Token');
-            const response = await fetch('http://localhost:5000/api/product/stock-addition', {
+            const response = await fetch('https://inventory-project-d3mr.onrender.com/api/product/stock-addition', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ export async function isLoggedIn() {
   if (!token) return false;
 
   try {
-    const response = await fetch("http://localhost:5000/api/auth/verify-token", {
+    const response = await fetch("https://inventory-project-d3mr.onrender.com/api/auth/verify-token", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

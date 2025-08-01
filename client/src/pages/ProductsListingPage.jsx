@@ -21,7 +21,7 @@ const ProductsListingPage = () => {
     const fetchProducts = async (pageNum = 1, reset = true) => {
         try {
         const response = await fetch(
-            `http://localhost:5000/api/product/get-product?page=${pageNum}&limit=${limit}&search=${search.trim()}&category=${selectedCategory}&sortBy=${sortBy}&order=${sortOrder}`, {
+            `https://inventory-project-d3mr.onrender.com/api/product/get-product?page=${pageNum}&limit=${limit}&search=${search.trim()}&category=${selectedCategory}&sortBy=${sortBy}&order=${sortOrder}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const ProductsListingPage = () => {
     };
 
     const fetchCategory = async () => {
-        const response = await fetch('http://localhost:5000/api/product/get-category', {
+        const response = await fetch('https://inventory-project-d3mr.onrender.com/api/product/get-category', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
