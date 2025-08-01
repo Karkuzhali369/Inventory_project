@@ -63,9 +63,9 @@ function Createuser({ onClose, onUserCreated }) {
           onChange={handleChange}
         >
           <option value="">Select Role</option>
-          <option value="ADMIN">Admin</option>
-          <option value="MODERATOR">Moderator</option>
-          <option value="USER">User</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="MODERATOR">MODERATOR</option>
+          <option value="USER">USER</option>
         </select>
 
         <input
