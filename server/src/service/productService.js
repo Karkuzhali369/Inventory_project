@@ -215,10 +215,23 @@ export const stockEntryService = async (userId, { stocks }) => {
     }
 
     return { status: 200, message: 'Stock successfully entered.', warning };
-  } catch (err) {
+  }
+  catch (err) {
     return { status: 500, message: err.message };
   }
 };
+
+export const getLowStockCountService = async () => {
+    try {
+        let lowStockCount = await Product.countDocuments({
+            $expr: { $lte: ["$currentQuantity", "$minQuantity"] }
+        });
+        return { status: 200, message: 'Get the low stock count.', lowStockCount: lowStockCount}
+    }
+    catch(err) {
+        return { status: 500, message: err.message };
+    }
+}
 
 
 export const getStatisticsService = async () => {
