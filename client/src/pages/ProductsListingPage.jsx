@@ -114,14 +114,14 @@ const ProductsListingPage = () => {
                     id="sortBy"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
+                    className="cursor-pointer appearance-none border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
                     >
                     <option value="productName">Product Name</option>
                     <option value="currentQuantity">Quantity</option>
                     </select>
                     <button
                     onClick={handleOrder}
-                    className="bg-blue-600 p-2 rounded-md hover:bg-blue-800 transition-all shrink-0"
+                    className="bg-blue-600 p-2 cursor-pointer rounded-md hover:bg-blue-800 transition-all shrink-0"
                     >
                     <img
                         src={arrowIcon}
@@ -142,7 +142,7 @@ const ProductsListingPage = () => {
                     id="category"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="appearance-none border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
+                    className="appearance-none cursor-pointer border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
                     >
                     {categories.map((cat) => (
                         <option key={cat} value={cat}>
