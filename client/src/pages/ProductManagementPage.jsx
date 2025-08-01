@@ -11,7 +11,7 @@ const ProductRow = ({ product, onEdit, onDelete }) => (
     <td className="py-2 px-4 border-b">₹{product.price}</td>
     <td className="py-2 px-4 border-b">{product.currentQuantity}&nbsp;{product.unit}</td>
     <td className="py-2 px-4 border-b space-x-2">
-      <button onClick={() => onEdit(product)} className="bg-yellow-400 hover:bg-yellow-500 cursor-pointer text-white py-1 px-3 rounded shadow-md">Edit</button>
+      <button onClick={() => onEdit(product)} className="bg-yellow-400 hover:bg-yellow-500 cursor-pointer text-white py-1 px-3 rounded shadow-md mb-2">Edit</button>
       <button onClick={() => onDelete(product)} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white py-1 px-3 rounded shadow-md">Delete</button>
     </td>
   </tr>
@@ -274,7 +274,7 @@ useEffect(() => {
 
         {/* Product Table */}
         <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
-            <table className="w-full table-auto text-sm">
+            <table className="w-full min-w-[600px] text-sm">
             <thead className="bg-gray-200 text-gray-700">
                 <tr>
                 <th className="py-2 px-4">Code</th>
@@ -326,6 +326,7 @@ useEffect(() => {
       {isEditing ? "Edit Product" : "Add Product"}
     </Dialog.Title>
     <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="grid grid-cols-1 gap-3">
       <input name="code" type="number" required defaultValue={selectedProduct?.code} placeholder="Code" className="w-full border p-2 rounded" />
       <input name="productName" required defaultValue={selectedProduct?.productName} placeholder="Product Name" className="w-full border p-2 rounded" />
 
@@ -374,7 +375,7 @@ useEffect(() => {
       <input name="size" defaultValue={selectedProduct?.size} placeholder="Size (optional)" className="w-full border p-2 rounded" />
       <input name="material" defaultValue={selectedProduct?.material} placeholder="Material (optional)" className="w-full border p-2 rounded" />
       <input name="make" defaultValue={selectedProduct?.make} placeholder="Make (optional)" className="w-full border p-2 rounded" />
-      
+  </div>    
       <div className="flex justify-end space-x-2 mt-4">
         <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
         <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">

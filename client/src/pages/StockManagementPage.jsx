@@ -98,8 +98,8 @@ const StockManagementPage = () => {
 
             <div className='flex justify-between mx-5 my-4'>
                 <div>
-                    <button onClick={() => setAdditionListPopup(true)} className='bg-green-500 text-white px-4 py-2 rounded'>Show Added</button>
-                    <button onClick={() => setEntryListPopup(true)} className='bg-blue-500 text-white px-4 py-2 rounded'>Show Entered</button>
+                    <button onClick={() => setAdditionListPopup(true)} className='bg-green-500 text-white px-4 py-2 ml-1 rounded'>Show Added</button>
+                    <button onClick={() => setEntryListPopup(true)} className='bg-blue-500 text-white px-4 py-2 ml-2 rounded'>Show Entered</button>
                 </div>
             </div>
 
