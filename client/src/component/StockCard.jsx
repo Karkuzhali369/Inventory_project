@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const StockCard = ({ product ,onQuantityChange, modified}) => {
+const StockCard = ({ product }) => {
     const [expanded, setExpanded] = useState(false);
     const [pendingChange, setPendingChange] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -9,23 +9,11 @@ const StockCard = ({ product ,onQuantityChange, modified}) => {
 
     const toggleExpand = () => setExpanded(!expanded);
 
-    useEffect(() => {
-        const storedChanges = JSON.parse(localStorage.getItem('stock_changes')) || {};
-        if (storedChanges[product._id]) {
-            setPendingChange(storedChanges[product._id]);
-        }
-    }, [product._id]);
-
     const openModal = (type) => {
         setActionType(type);
         setInputQty('');
         setShowModal(true);
     };
-
-    const closeModal = () => {
-        setShowModal(false);
-    };
-
     
     const baseQty = pendingChange ? pendingChange.currentQuantity : product.currentQuantity;
     const bgColor =
@@ -57,38 +45,69 @@ const StockCard = ({ product ,onQuantityChange, modified}) => {
 
     // Inside StockCard.jsx, where you handle confirm for ADD or ENTRY
     const handleConfirm = () => {
-    const qty = parseInt(inputQty);
-    if (isNaN(qty) || qty < 0) return;
+        const qty = parseInt(inputQty);
+        if (isNaN(qty) || qty < 0) return;
 
-    const updatedQty = actionType === 'add'
-        ? product.currentQuantity + qty
-        : product.currentQuantity - qty;
+        const updatedQty = actionType === 'add'
+            ? handleAdd()
+            : handleEntry();
 
-    const updatedProduct = {
-        ...product,
-        currentQuantity: updatedQty,
-        changeType: actionType,
+        // setPendingChange(updatedProduct);
+        setShowModal(false);
     };
 
-    const existingChanges = JSON.parse(localStorage.getItem('stock_changes')) || {};
-    existingChanges[product._id] = updatedProduct;
-    localStorage.setItem('stock_changes', JSON.stringify(existingChanges));
-
-    if (onQuantityChange) {
-        onQuantityChange(product._id, updatedProduct);
+    const handleAdd = () => {
+        if(!localStorage.getItem('StockAdd')) {
+            localStorage.setItem('StockAdd', JSON.stringify([]));
+        }
+        const productsInLs = JSON.parse(localStorage.getItem('StockAdd'));
+        console.log(productsInLs)
+        let i = 0;
+        for(i=0; i<productsInLs.length; i++) {
+            if(productsInLs[i].productId === product._id) {
+                productsInLs[i].value = inputQty;
+                break;
+            }
+        }
+        console.log(i)
+        if(i === productsInLs.length) {
+            productsInLs.push({
+                productId: product._id,
+                productName: product.productName,
+                code: product.code,
+                value: inputQty
+            });
+        }
+        
+        localStorage.setItem('StockAdd', JSON.stringify(productsInLs));
     }
-
-    setPendingChange(updatedProduct);
-    setShowModal(false);
-    };
-
-
-
+    const handleEntry = () => {
+        if(!localStorage.getItem('StockEntry')) {
+            localStorage.setItem('StockEntry', JSON.stringify([]));
+        }
+        const productsInLs = JSON.parse(localStorage.getItem('StockEntry'));
+        let i = 0;
+        for(i=0; i<productsInLs.length; i++) {
+            if(productsInLs[i].productId === product._id) {
+                productsInLs[i].value = inputQty
+                break;
+            }
+        }
+        if(i === productsInLs.length) {
+            productsInLs.push({
+                productId: product._id,
+                productName: product.productName,
+                code: product.code,
+                value: inputQty
+            });
+        }
+        localStorage.setItem('StockEntry', JSON.stringify(productsInLs));
+    }
 
     return (
         <>
             <div
-                className={`${bgColor} ${modified ? 'border-2 border-pink-500' : 'border-transparent'} p-3 sm:p-4 rounded-xl shadow my-3 mx-3 transition-transform transform hover:scale-[1.01] hover:shadow-md cursor-pointer`}
+                className={`${bgColor} border-transparent p-3 sm:p-4 rounded-xl shadow my-3 mx-3 transition-transform transform hover:scale-[1.01] hover:shadow-md cursor-pointer`}
                 onClick={toggleExpand}
             >
                 <div className="grid grid-cols-1 md:grid-cols-5 sm:gap-2 text-blue-700 text-sm sm:text-base">
@@ -140,16 +159,10 @@ const StockCard = ({ product ,onQuantityChange, modified}) => {
                             />
                         </div>
                         <div className="flex justify-end mt-5 gap-2">
-                            <button
-                                className="bg-gray-400 text-white px-3 py-1 rounded"
-                                onClick={closeModal}
-                            >
+                            <button onClick={() => setShowModal(false)} className="bg-gray-400 text-white px-3 py-1 rounded">
                                 Cancel
                             </button>
-                            <button
-                                className="bg-blue-600 text-white px-3 py-1 rounded"
-                                onClick={handleConfirm}
-                            >
+                            <button onClick={() => handleConfirm()} className="bg-blue-600 text-white px-3 py-1 rounded">
                                 Confirm
                             </button>
                         </div>
