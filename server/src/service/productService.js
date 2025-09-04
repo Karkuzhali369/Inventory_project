@@ -3,7 +3,7 @@ import Product from '../model/productModel.js'
 import Logs from '../model/logs.js';
 import moment from 'moment'; // or use native Date
 
-export const addProductService = async ({ code, productName, size=null, category, material=null, make=null, currentQuantity, unit, price, minQuantity }) => {
+export const addProductService = async ({ code, productName, size=null, category, material=null, make=null, currentQuantity, unit, cp, sp, dealer, minQuantity }) => {
     try {
         const product = new Product({
             code,
@@ -14,7 +14,9 @@ export const addProductService = async ({ code, productName, size=null, category
             make,
             currentQuantity,
             unit,
-            price,
+            cp,
+            sp,
+            dealer,
             minQuantity
         });
         await product.save();
@@ -25,7 +27,7 @@ export const addProductService = async ({ code, productName, size=null, category
     }
 }
 
-export const updateProductService = async ({ productId, code, productName, size, category, material, make, currentQuantity, unit, price, minQuantity }) => {
+export const updateProductService = async ({ productId, code, productName, size, category, material, make, currentQuantity, unit, cp, sp, dealer, minQuantity }) => {
     try {
         const updateFields = {};
 
@@ -37,7 +39,9 @@ export const updateProductService = async ({ productId, code, productName, size,
         if (make !== undefined) updateFields.make = make;
         if (currentQuantity !== undefined) updateFields.currentQuantity = currentQuantity;
         if (unit !== undefined) updateFields.unit = unit;
-        if (price !== undefined) updateFields.price = price;
+        if (cp !== undefined) updateFields.cp = cp;
+        if (sp !== undefined) updateFields.sp = sp;
+        if (dealer !== undefined) updateFields.dealer = dealer;
         if (minQuantity !== undefined) updateFields.minQuantity = minQuantity;
 
         const updatedProduct = await Product.findByIdAndUpdate(

@@ -85,7 +85,9 @@ const ProductManagementPage = () => {
         make: form.make.value || null,
         currentQuantity: parseInt(form.currentQuantity.value),
         unit: form.unit.value,
-        price: parseFloat(form.price.value),
+        cp: parseFloat(form.cp.value),
+        sp: parseFloat(form.sp.value),
+        dealer: form.dealer.value,
         minQuantity: parseInt(form.minQuantity.value),
         };
         const endpoint = isEditing
@@ -125,7 +127,8 @@ const ProductManagementPage = () => {
                 <th className="py-2 px-4">Code</th>
                 <th className="py-2 px-4">Product Name</th>
                 <th className="py-2 px-4">Category</th>
-                <th className="py-2 px-4">Price</th>
+                <th className="py-2 px-4">CP</th>
+                <th className="py-2 px-4">SP</th>
                 <th className="py-2 px-4">Quantity</th>
                 <th className="py-2 px-4">Actions</th>
                 </tr>
