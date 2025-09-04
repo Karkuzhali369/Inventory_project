@@ -13,7 +13,7 @@ const StatisticsPage = () => {
     const token = localStorage.getItem('Token');
     const getStatisticsData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/product/get-statistics', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/get-statistics`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
