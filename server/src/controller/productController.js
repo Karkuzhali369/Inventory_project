@@ -9,6 +9,7 @@ export const addProduct = async (req, res) => {
         return res.status(403).send(response('FAILED', 'You dont have enough perimission.', null));
     }
     try {
+        // console.log(req.body)
         const result = await addProductService(req.body);
         if(result.status === 201) {
             return res.status(201).send(response('SUCCESS', result.message, { product: result.product }));

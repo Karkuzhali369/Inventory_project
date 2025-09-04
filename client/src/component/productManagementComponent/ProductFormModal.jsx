@@ -86,14 +86,14 @@ const ProductFormModal = ({ isOpen, onClose, onSubmit, selectedProduct, isEditin
             </div>
 
             {/* Other fields */}
-            {["unit","price","currentQuantity","minQuantity","size","material","make"].map((field) => (
+            {["unit",'cp', 'sp', 'dealer', "currentQuantity","minQuantity","size","material","make"].map((field) => (
                 <div key={field} className="grid grid-cols-12 gap-3 items-center">
                 <label className="col-span-4 text-gray-600 font-medium">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
                 <input
                     name={field}
-                    type={["price","currentQuantity","minQuantity"].includes(field) ? "number" : "text"}
-                    step={field==="price" ? "0.01" : undefined}
-                    required={!["size","material","make"].includes(field)}
+                    type={["cp", 'sp',"currentQuantity","minQuantity"].includes(field) ? "number" : "text"}
+                    step={field==="cp" || field==='sp'? "0.01" : undefined}
+                    required={!['dealer', "size","material","make"].includes(field)}
                     defaultValue={selectedProduct?.[field]}
                     placeholder={`Enter ${field}`}
                     className="col-span-8 border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full"

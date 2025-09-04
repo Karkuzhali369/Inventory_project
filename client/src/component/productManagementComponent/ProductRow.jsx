@@ -3,7 +3,8 @@ const ProductRow = ({ product, onEdit, onDelete }) => (
     <td className="py-2 px-4 border-b">{product.code}</td>
     <td className="py-2 px-4 border-b">{product.productName}</td>
     <td className="py-2 px-4 border-b">{product.category}</td>
-    <td className="py-2 px-4 border-b">₹{product.price}</td>
+    <td className="py-2 px-4 border-b">₹{product.cp}</td>
+    <td className="py-2 px-4 border-b">₹{product.sp}</td>
     <td className="py-2 px-4 border-b">{product.currentQuantity}&nbsp;{product.unit}</td>
     <td className="py-2 px-4 border-b space-x-2">
       <button onClick={() => onEdit(product)} className="bg-yellow-400 hover:bg-yellow-500 cursor-pointer text-white py-1 px-3 rounded shadow-md mb-2">Edit</button>
