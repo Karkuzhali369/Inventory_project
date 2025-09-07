@@ -11,7 +11,7 @@ const GroupedBarChart = ({ groupedData }) => {
 
     const getCategory = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/product/get-category', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/get-category`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

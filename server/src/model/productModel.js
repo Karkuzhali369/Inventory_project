@@ -9,7 +9,10 @@ const productSchema = new mongoose.Schema({
     make: { type: String },
     currentQuantity: { type: Number, required: true },
     unit: { type: String, required: true },
-    price: { type: Number, required: true },
+    // price: { type: Number, required: true },
+    cp: { type: Number, required: true},
+    sp: { type: Number, required: true},
+    dealer: { type: String},
     minQuantity: { type: Number, required: true },
     lastModified: { type: Date, default: Date.now }
 }, { timestamps: true });

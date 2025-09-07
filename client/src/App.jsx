@@ -26,10 +26,10 @@ function App() {
                     <Route path='/stock-management' element={<StockManagementPage />} />
                     <Route path="/product-management" element={<ProductManagementPage />} />
                     <Route path='/statistics' element={<StatisticsPage />} />
+
                     <Route path='/stock-entry' element={<StockEntryPage/>} />
-                    {isAdmin && (
-                        <Route path="/admin-panel" element={<AdminPanel />} />
-                    )}
+                    
+                    <Route path="/admin-panel" element={<AdminPanel />}/>
                 </Route>
             </Route>
             

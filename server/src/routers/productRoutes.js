@@ -9,7 +9,7 @@ router.use(verifyToken);
 
 router.post('/add-product', addProduct);
 router.put('/modify-product', modifyProduct);
-router.delete('/delete-product', deleteProduct);
+router.delete('/delete-product', deleteProduct);//
 router.get('/get-product', getProduct);
 
 router.get('/get-category', getCategory);
