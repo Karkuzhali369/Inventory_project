@@ -22,9 +22,13 @@ const StockAddedList = ({ setAdditionListPopup }) => {
             stocks: []
         };
         stored.map(product => {
+            // console.log(product)
             inp.stocks.push({
                 productId: product.productId,
-                value: Number(product.value)
+                productName: product.productName,
+                code: product.code,
+                cost: product.cost,
+                quantity: product.quantity
             })
         });
         try {
@@ -63,7 +67,8 @@ const StockAddedList = ({ setAdditionListPopup }) => {
                             <p>
                                 <strong>{product.productName}</strong> (Code: {product.code})
                             </p>
-                            <p className="text-sm text-gray-600">Change: {product.value}</p>
+                            <p className="text-sm text-gray-600 inline mr-5">Quantity: <strong>{product.quantity}</strong></p>
+                            <p className="text-sm text-gray-600 inline">Cost (cp): <strong>{product.cost}</strong> (per item)</p>
                             </div>
                             <button
                             onClick={() => cancelChange(product.productId)}
