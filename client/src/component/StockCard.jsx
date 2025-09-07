@@ -6,12 +6,14 @@ const StockCard = ({ product }) => {
     const [showModal, setShowModal] = useState(false);
     const [actionType, setActionType] = useState(''); // 'add' or 'entry'
     const [inputQty, setInputQty] = useState('');
+    const [inputCost, setInputCost] = useState('');
 
     const toggleExpand = () => setExpanded(!expanded);
 
     const openModal = (type) => {
         setActionType(type);
         setInputQty('');
+        setInputCost('');
         setShowModal(true);
     };
     
@@ -65,7 +67,8 @@ const StockCard = ({ product }) => {
         let i = 0;
         for(i=0; i<productsInLs.length; i++) {
             if(productsInLs[i].productId === product._id) {
-                productsInLs[i].value = inputQty;
+                productsInLs[i].quantity = Number(inputQty);
+                productsInLs[i].cost = Number(inputCost);
                 break;
             }
         }
@@ -75,7 +78,8 @@ const StockCard = ({ product }) => {
                 productId: product._id,
                 productName: product.productName,
                 code: product.code,
-                value: inputQty
+                quantity: Number(inputQty),
+                cost: Number(inputCost)
             });
         }
         
@@ -89,7 +93,7 @@ const StockCard = ({ product }) => {
         let i = 0;
         for(i=0; i<productsInLs.length; i++) {
             if(productsInLs[i].productId === product._id) {
-                productsInLs[i].value = inputQty
+                productsInLs[i].quantity = Number(inputQty);
                 break;
             }
         }
@@ -98,7 +102,7 @@ const StockCard = ({ product }) => {
                 productId: product._id,
                 productName: product.productName,
                 code: product.code,
-                value: inputQty
+                quantity: Number(inputQty)
             });
         }
         localStorage.setItem('StockEntry', JSON.stringify(productsInLs));
@@ -116,11 +120,11 @@ const StockCard = ({ product }) => {
                     <div><span>Category:</span> <strong>{product.category}</strong></div>
                     <div><span>Quantity:</span> <strong>{baseQty} {product.unit}</strong></div>
                     <div>
-                        <button className="bg-green-500 text-white px-4 py-1 rounded mb-1"
+                        <button className="bg-green-500 text-white px-4 py-1 rounded mb-1 cursor-pointer"
                             onClick={(e) => { e.stopPropagation(); openModal('add'); }}>
                             ADD +
                         </button>{' '}
-                        <button className="bg-blue-500 text-white px-4 py-1 rounded"
+                        <button className="bg-blue-500 text-white px-4 py-1 rounded cursor-pointer"
                             onClick={(e) => { e.stopPropagation(); openModal('entry'); }}>
                             ENTRY -
                         </button>
@@ -132,7 +136,8 @@ const StockCard = ({ product }) => {
                         {product.material && <div>Material:<strong> {product.material}</strong></div>}
                         {product.size && <div>Size:<strong> {product.size}</strong></div>}
                         {product.make && <div>Make:<strong> {product.make}</strong></div>}
-                        <div>Price:<strong> ₹{product.price}</strong></div>
+                        <div>Cp:<strong> ₹{product.cp}</strong></div>
+                        <div>Sp:<strong> ₹{product.sp}</strong></div>
                     </div>
                 </div>
             </div>
@@ -157,11 +162,28 @@ const StockCard = ({ product }) => {
                                 min={0}
                             />
                         </div>
+                        {
+                            actionType === 'add' && (
+                                <div className="mt-4">
+                                    <label className="block text-sm text-gray-700 mb-1">
+                                        Cost price
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={inputCost}
+                                        onChange={(e) => setInputCost(e.target.value)}
+                                        className="w-full border rounded px-3 py-1 focus:outline-none focus:ring focus:border-blue-500"
+                                        min={0}
+                                    />
+                                </div>
+                            )
+                        }
+                        
                         <div className="flex justify-end mt-5 gap-2">
-                            <button onClick={() => setShowModal(false)} className="bg-gray-400 text-white px-3 py-1 rounded">
+                            <button onClick={() => setShowModal(false)} className="bg-gray-400 text-white px-3 py-1 rounded cursor-pointer">
                                 Cancel
                             </button>
-                            <button onClick={() => handleConfirm()} className="bg-blue-600 text-white px-3 py-1 rounded">
+                            <button onClick={() => handleConfirm()} className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer">
                                 Confirm
                             </button>
                         </div>
