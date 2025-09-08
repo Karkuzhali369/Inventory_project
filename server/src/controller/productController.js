@@ -1,6 +1,6 @@
 import { response } from "../utils/response.js";
 
-import { addProductService, updateProductService, deleteProductService, getProductsService, getCategoryService, stockAdditionService, stockEntryService, getLowStockCountService, getStatisticsService } from "../service/productService.js";
+import { addProductService, updateProductService, deleteProductService, getProductsService, getCategoryService, stockAdditionService, stockEntryService, getLowStockCountService, getStatisticsService, getEntryLogsService } from "../service/productService.js";
 
 export const addProduct = async (req, res) => {
     const { role } = req.user;
@@ -157,4 +157,22 @@ export const getStatistics = async (req, res) => {
     catch(err) {
         return res.status(500).send(response('FAILED', err.message, null));
     }   
+}
+
+export const getEntryLogs = async (req, res) => {
+    try {
+        const { page, limit } = req.query;
+        const result = await getEntryLogsService({ page, limit });
+
+        if (result.status === 200) {
+            return res.status(200).send(response('SUCCESS', result.message, {
+                entryLogs: result.data,
+                pagination: result.pagination
+            }));
+        } else {
+            return res.status(result.status).send(response('FAILED', result.message, null));
+        }
+    } catch (err) {
+        return res.status(500).send(response('FAILED', err.message, null));
+    }
 }

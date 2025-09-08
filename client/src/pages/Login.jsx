@@ -25,7 +25,6 @@ const Login = () => {
         },
         body: JSON.stringify({ userName: username, password }),
       });
-
       const data = await response.json();
       console.log(data);
 

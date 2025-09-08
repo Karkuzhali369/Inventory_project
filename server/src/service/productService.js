@@ -416,3 +416,58 @@ export const getLastThreeMonthsSales = async () => {
   return result;
 };
 
+// replace the empty function with this implementation
+export const getEntryLogsService = async ({ page = 1, limit = 10 } = {}) => {
+  try {
+    // normalize numbers
+    page = Number(page) || 1;
+    limit = Number(limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // 1) fetch logs (latest first) with pagination
+    const logs = await Log.find()
+      .sort({ dateAndTime: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    // 2) fetch records linked to these logs
+    const logIds = logs.map(l => l._id);
+    let records = [];
+    if (logIds.length) {
+      records = await Record.find({ logId: { $in: logIds } }).lean();
+    }
+
+    // 3) attach records to their corresponding log
+    const logMap = {};
+    logs.forEach(l => {
+      const idStr = l._id.toString();
+      logMap[idStr] = { ...l, records: [] };
+    });
+
+    records.forEach(r => {
+      const lid = (r.logId && r.logId.toString && r.logId.toString()) || String(r.logId);
+      if (lid && logMap[lid]) {
+        logMap[lid].records.push(r);
+      }
+    });
+
+    const logsWithRecords = Object.values(logMap);
+
+    // 4) total count for pagination meta
+    const total = await Log.countDocuments();
+
+    return {
+      status: 200,
+      message: "Entry logs fetched successfully.",
+      data: logsWithRecords,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
+    };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};
