@@ -416,55 +416,35 @@ export const getLastThreeMonthsSales = async () => {
   return result;
 };
 
-// replace the empty function with this implementation
-export const getEntryLogsService = async ({ page = 1, limit = 10 } = {}) => {
+
+export const getEntryLogsService = async ({ page = 1, limit = 10, stock }) => {
   try {
-    // normalize numbers
-    page = Number(page) || 1;
-    limit = Number(limit) || 10;
-    const skip = (page - 1) * limit;
-
-    // 1) fetch logs (latest first) with pagination
-    const logs = await Log.find()
-      .sort({ dateAndTime: -1 })
-      .skip(skip)
-      .limit(limit)
-      .lean();
-
-    // 2) fetch records linked to these logs
-    const logIds = logs.map(l => l._id);
-    let records = [];
-    if (logIds.length) {
-      records = await Record.find({ logId: { $in: logIds } }).lean();
+    const query = {};
+    if (stock === "add") {
+      query.isAdded = true;
+    } else if (stock === "entry") {
+      query.isAdded = false;
     }
 
-    // 3) attach records to their corresponding log
-    const logMap = {};
-    logs.forEach(l => {
-      const idStr = l._id.toString();
-      logMap[idStr] = { ...l, records: [] };
-    });
+    const skip = (page - 1) * limit;
 
-    records.forEach(r => {
-      const lid = (r.logId && r.logId.toString && r.logId.toString()) || String(r.logId);
-      if (lid && logMap[lid]) {
-        logMap[lid].records.push(r);
-      }
-    });
+    
+    const logs = await Log.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
 
-    const logsWithRecords = Object.values(logMap);
-
-    // 4) total count for pagination meta
-    const total = await Log.countDocuments();
+    const total = await Log.countDocuments(query);
 
     return {
       status: 200,
-      message: "Entry logs fetched successfully.",
-      data: logsWithRecords,
+      message: "Logs fetched successfully",
+      data: logs, 
       pagination: {
         total,
-        page,
-        pages: Math.ceil(total / limit),
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / limit),
       },
     };
   } catch (err) {

@@ -160,19 +160,20 @@ export const getStatistics = async (req, res) => {
 }
 
 export const getEntryLogs = async (req, res) => {
-    try {
-        const { page, limit } = req.query;
-        const result = await getEntryLogsService({ page, limit });
+  try {
+    const { page, limit, stock } = req.query;
 
-        if (result.status === 200) {
-            return res.status(200).send(response('SUCCESS', result.message, {
-                entryLogs: result.data,
-                pagination: result.pagination
-            }));
-        } else {
-            return res.status(result.status).send(response('FAILED', result.message, null));
-        }
-    } catch (err) {
-        return res.status(500).send(response('FAILED', err.message, null));
+    const result = await getEntryLogsService({ page, limit, stock });
+
+    if (result.status === 200) {
+      return res.status(200).send(response("SUCCESS", result.message, {
+        logs: result.data,
+        paging: result.pagination,
+      }));
+    } else {
+      return res.status(result.status).send(response("FAILED", result.message, null));
     }
-}
+  } catch (err) {
+    return res.status(500).send(response("FAILED", err.message, null));
+  }
+};
