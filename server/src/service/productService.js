@@ -416,3 +416,49 @@ export const getLastThreeMonthsSales = async () => {
   return result;
 };
 
+
+export const getEntryLogsService = async ({ page = 1, limit = 10, stock }) => {
+  try {
+    const query = {};
+    if (stock === "add") {
+      query.isAdded = true;
+    } else if (stock === "entry") {
+      query.isAdded = false;
+    }
+
+    const skip = (page - 1) * limit;
+
+    
+    const logs = await Log.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await Log.countDocuments(query);
+
+    return {
+      status: 200,
+      message: "Logs fetched successfully",
+      data: logs, 
+      pagination: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};
+
+
+export const getRecordsService = async (logId) => {
+    try {
+        const records = await Record.find({logId: logId})
+        return { status: 200, message: 'Records fetched successfully.', records: records };
+    }
+    catch (err) {
+        return { status: 500, message: err.message };
+    }
+}
