@@ -1,6 +1,6 @@
 import { response } from "../utils/response.js";
 
-import { addProductService, updateProductService, deleteProductService, getProductsService, getCategoryService, stockAdditionService, stockEntryService, getLowStockCountService, getStatisticsService } from "../service/productService.js";
+import { addProductService, updateProductService, deleteProductService, getProductsService, getCategoryService, stockAdditionService, stockEntryService, getLowStockCountService, getStatisticsService, getEntryLogsService, getRecordsService } from "../service/productService.js";
 
 export const addProduct = async (req, res) => {
     const { role } = req.user;
@@ -9,6 +9,7 @@ export const addProduct = async (req, res) => {
         return res.status(403).send(response('FAILED', 'You dont have enough perimission.', null));
     }
     try {
+        // console.log(req.body)
         const result = await addProductService(req.body);
         if(result.status === 201) {
             return res.status(201).send(response('SUCCESS', result.message, { product: result.product }));
@@ -157,3 +158,40 @@ export const getStatistics = async (req, res) => {
         return res.status(500).send(response('FAILED', err.message, null));
     }   
 }
+
+export const getEntryLogs = async (req, res) => {
+  try {
+    const { page, limit, stock } = req.query;
+
+    const result = await getEntryLogsService({ page, limit, stock });
+
+    if (result.status === 200) {
+      return res.status(200).send(response("SUCCESS", result.message, {
+        logs: result.data,
+        paging: result.pagination,
+      }));
+    } else {
+      return res.status(result.status).send(response("FAILED", result.message, null));
+    }
+  } catch (err) {
+    return res.status(500).send(response("FAILED", err.message, null));
+  }
+};
+
+
+export const getRecords = async (req, res) => {
+    try {
+        const { logid } = req.query;
+        const result = await getRecordsService(logid);
+
+        if (result.status === 200) {
+            return res.status(200).send(response("SUCCESS", result.message, result.records));
+        }
+        else {
+            return res.status(result.status).send(response("FAILED", result.message, null));
+        }
+    }
+    catch (err) {
+        return res.status(500).send(response("FAILED", err.message, null));
+    }
+};

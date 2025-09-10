@@ -2,7 +2,7 @@ import express from 'express';
 
 import { verifyToken } from '../middleware/authMiddleware.js';
 
-import { addProduct, modifyProduct, deleteProduct, getProduct, getCategory, stockAddition, stockEntry, getLowStockCount, getStatistics } from '../controller/productController.js';
+import { addProduct, modifyProduct, deleteProduct, getProduct, getCategory, stockAddition, stockEntry, getLowStockCount, getStatistics, getEntryLogs, getRecords } from '../controller/productController.js';
 
 const router = express.Router();
 router.use(verifyToken);
@@ -19,5 +19,8 @@ router.post('/stock-entry', stockEntry);
 
 router.get('/get-lowstock-count', getLowStockCount);
 router.get('/get-statistics', getStatistics);
+
+router.get('/get-entry-logs', getEntryLogs);
+router.get('/get-records', getRecords);
 
 export default router;

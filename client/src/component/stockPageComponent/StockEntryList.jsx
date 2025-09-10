@@ -24,12 +24,16 @@ const StockEntryList = ({ setEntryListPopup }) => {
         stored.map(product => {
             inp.stocks.push({
                 productId: product.productId,
-                value: Number(product.value)
+                productName: product.productName,
+                code: product.code,
+                quantity: product.quantity
             })
         });
         try {
             const token = localStorage.getItem('Token');
-            const response = await fetch('https://inventory-project-d3mr.onrender.com/api/product/stock-entry', {
+
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/stock-entry`, {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,6 +43,7 @@ const StockEntryList = ({ setEntryListPopup }) => {
             });
 
             const data = await response.json();
+            console.log(data);
 
             const stored = JSON.parse(localStorage.getItem('StockEntry')) || [];
 
@@ -77,7 +82,7 @@ const StockEntryList = ({ setEntryListPopup }) => {
                     <p>
                         <strong>{product.productName}</strong> (Code: {product.code})
                     </p>
-                    <p className="text-sm text-gray-600">Change: {product.value}</p>
+                    <p className="text-sm text-gray-600">Quantity: {product.quantity}</p>
                     </div>
                     <button
                     onClick={() => cancelChange(product.productId)}
@@ -95,7 +100,7 @@ const StockEntryList = ({ setEntryListPopup }) => {
                     Close
                 </button>
                 <button onClick={() => addEntryList()} className="bg-green-500 text-white px-4 py-2 ml-2 rounded">
-                            save
+                    save
                 </button>
             </div>
         </div>

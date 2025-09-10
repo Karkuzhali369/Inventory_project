@@ -1,9 +1,12 @@
 import crypto from 'crypto';
-import Product from '../model/productModel.js'
-import Logs from '../model/logs.js';
+import Product from '../model/productModel.js';
+import User from '../model/userModel.js';
+import Log from '../model/log.js';
 import moment from 'moment'; // or use native Date
+import mongoose from 'mongoose';
+import Record from '../model/recordModel.js';
 
-export const addProductService = async ({ code, productName, size=null, category, material=null, make=null, currentQuantity, unit, price, minQuantity }) => {
+export const addProductService = async ({ code, productName, size=null, category, material=null, make=null, currentQuantity, unit, cp, sp, dealer, minQuantity }) => {
     try {
         const product = new Product({
             code,
@@ -14,7 +17,9 @@ export const addProductService = async ({ code, productName, size=null, category
             make,
             currentQuantity,
             unit,
-            price,
+            cp,
+            sp,
+            dealer,
             minQuantity
         });
         await product.save();
@@ -25,7 +30,7 @@ export const addProductService = async ({ code, productName, size=null, category
     }
 }
 
-export const updateProductService = async ({ productId, code, productName, size, category, material, make, currentQuantity, unit, price, minQuantity }) => {
+export const updateProductService = async ({ productId, code, productName, size, category, material, make, currentQuantity, unit, cp, sp, dealer, minQuantity }) => {
     try {
         const updateFields = {};
 
@@ -37,7 +42,9 @@ export const updateProductService = async ({ productId, code, productName, size,
         if (make !== undefined) updateFields.make = make;
         if (currentQuantity !== undefined) updateFields.currentQuantity = currentQuantity;
         if (unit !== undefined) updateFields.unit = unit;
-        if (price !== undefined) updateFields.price = price;
+        if (cp !== undefined) updateFields.cp = cp;
+        if (sp !== undefined) updateFields.sp = sp;
+        if (dealer !== undefined) updateFields.dealer = dealer;
         if (minQuantity !== undefined) updateFields.minQuantity = minQuantity;
 
         const updatedProduct = await Product.findByIdAndUpdate(
@@ -121,104 +128,133 @@ export const getCategoryService = async () => {
 }
 
 export const stockAdditionService = async (userId, { stocks }) => {
-  if (!stocks?.length) {
-    return { status: 400, message: 'No stock items provided.' };
-  }
 
-  const now = new Date();
-  const reference = crypto.randomUUID();
-
-  try {
-    for (const stock of stocks) {
-      const product = await Product.findById(stock.productId);
-      if (!product) {
-        console.warn(`Product not found for ID: ${stock.productId}`);
-        continue;
-      }
-
-      const valueToAdd = Number(stock.value);
-      if (isNaN(valueToAdd)) {
-        console.warn(`Invalid stock value: ${stock.value}`);
-        continue;
-      }
-
-      product.currentQuantity = (Number(product.currentQuantity) || 0) + valueToAdd;
-      product.lastModified = now;
-
-      await Logs.create({
-        productId: product._id,
-        userId,
-        reference,
-        quantity: valueToAdd,
-        isAdded: true,
-        dateAndTime: now // ✅ Date object
-      });
-
-      await product.save();
+    if (!stocks?.length) {
+        return { status: 400, message: 'No stock items provided.' };
     }
 
-    return { status: 200, message: 'Stock successfully added.' };
-  } catch (err) {
-    return { status: 500, message: err.message };
-  }
+    const now = new Date();
+    let totalCost = 0;
+    for(let i=0; i<stocks.length; i++) {
+        totalCost += stocks[i].cost * stocks[i].quantity;
+    }
+
+    try {
+        const { userName } = await User.findById(new mongoose.Types.ObjectId(userId)).select({userName: 1, _id: 0});
+        const log = new Log({
+            author: userName,
+            isAdded: true,
+            totalProducts: stocks.length,
+            totalCost: totalCost,
+            dateAndTime: now
+        });
+        await log.save();
+
+        for(let stock of stocks) {
+            let product = await Product.findById(stock.productId);
+
+            if (!product) {
+                console.warn(`Product not found for ID: ${stock.productId}`);
+                continue;
+            }
+            product.cp = (product.cp * product.currentQuantity + stock.cost * stock.quantity) / (product.currentQuantity+stock.quantity);
+            product.currentQuantity = product.currentQuantity + stock.quantity;
+            product.lastModified = now;
+
+            const record = new Record({
+                logId: log._id,
+                productId: new mongoose.Types.ObjectId(stock.productId),
+                code: stock.code,
+                productName: stock.productName,
+                category: product.category,
+                quantity: stock.quantity,
+                unitPrice: stock.cost
+            });
+            
+            await product.save();
+            await record.save();
+        }
+
+        return { status: 200, message: 'Stock successfully added.' };
+    } catch (err) {
+        console.log(err.message)
+        return { status: 500, message: err.message };
+    }
 };
 
 
 export const stockEntryService = async (userId, { stocks }) => {
-  if (!stocks?.length) {
-    return { status: 400, message: 'No stock items provided.' };
-  }
-
-  const now = new Date();
-  const reference = crypto.randomUUID();
-  const warning = [];
-
-  try {
-    for (const stock of stocks) {
-      const product = await Product.findById(stock.productId);
-      if (!product) {
-        console.warn(`Product not found for ID: ${stock.productId}`);
-        continue;
-      }
-
-      const valueToSub = Number(stock.value);
-      if (isNaN(valueToSub)) {
-        console.warn(`Invalid stock value: ${stock.value}`);
-        continue;
-      }
-
-      product.currentQuantity = Number(product.currentQuantity) || 0;
-
-      if (product.currentQuantity < valueToSub) {
-        warning.push({
-          productName: product.productName,
-          productId: product._id,
-          currentQuantity: product.currentQuantity,
-          entry: valueToSub
-        });
-        continue;
-      }
-
-      product.currentQuantity -= valueToSub;
-      product.lastModified = now;
-
-      await Logs.create({
-        productId: product._id,
-        userId,
-        reference,
-        quantity: valueToSub,
-        isAdded: false,
-        dateAndTime: now // ✅ Date object
-      });
-
-      await product.save();
+    if (!stocks?.length) {
+        return { status: 400, message: 'No stock items provided.' };
     }
 
-    return { status: 200, message: 'Stock successfully entered.', warning };
-  }
-  catch (err) {
-    return { status: 500, message: err.message };
-  }
+    const now = new Date();
+    const warning = [];
+
+    try {
+        const { userName } = await User.findById(new mongoose.Types.ObjectId(userId)).select({userName: 1, _id: 0});
+        const log = new Log({
+            author: userName,
+            isAdded: false,
+            totalProducts: 0,
+            totalCost: 0,
+            dateAndTime: now
+        });
+
+        let totalProducts = 0;
+        let totalCost = 0;
+        let profit = 0;
+
+        for (const stock of stocks) {
+            const product = await Product.findById(stock.productId);
+            if (!product) {
+                console.warn(`Product not found for ID: ${stock.productId}`);
+                continue;
+            }
+
+            product.currentQuantity = Number(product.currentQuantity) || 0; // Don't know why this line exist
+
+
+            if (product.currentQuantity < stock.quantity) {
+                warning.push({
+                    productName: product.productName,
+                    productId: product._id,
+                    currentQuantity: product.currentQuantity,
+                    entry: stock.quantity
+                });
+                continue;
+            }
+            product.currentQuantity -= stock.quantity;
+            product.lastModified = now;
+
+            const record = new Record({
+                logId: log._id,
+                productId: new mongoose.Types.ObjectId(stock.productId),
+                code: stock.code,
+                productName: stock.productName,
+                category: product.category,
+                quantity: stock.quantity,
+                unitPrice: product.sp
+            });
+            totalProducts += 1;
+            totalCost += stock.quantity * product.sp;
+            profit += (product.sp - product.cp) * stock.quantity;
+
+            await record.save();
+            await product.save();
+        }
+        log.totalProducts = totalProducts;
+        log.totalCost = totalCost;
+        log.profit = profit;
+
+        log.save();
+
+        return { status: 200, message: 'Stock successfully entered.', warning };
+    }
+    catch (err) {
+        console.log(err.message)
+        return { status: 500, message: err.message };
+    }
 };
 
 export const getLowStockCountService = async () => {
@@ -380,3 +416,49 @@ export const getLastThreeMonthsSales = async () => {
   return result;
 };
 
+
+export const getEntryLogsService = async ({ page = 1, limit = 10, stock }) => {
+  try {
+    const query = {};
+    if (stock === "add") {
+      query.isAdded = true;
+    } else if (stock === "entry") {
+      query.isAdded = false;
+    }
+
+    const skip = (page - 1) * limit;
+
+    
+    const logs = await Log.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await Log.countDocuments(query);
+
+    return {
+      status: 200,
+      message: "Logs fetched successfully",
+      data: logs, 
+      pagination: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};
+
+
+export const getRecordsService = async (logId) => {
+    try {
+        const records = await Record.find({logId: logId})
+        return { status: 200, message: 'Records fetched successfully.', records: records };
+    }
+    catch (err) {
+        return { status: 500, message: err.message };
+    }
+}

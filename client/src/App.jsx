@@ -11,11 +11,14 @@ import AdminPanel from './pages/adminpanel/Adminpanel';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 import Mainlayout from './layout/Mainlayout';
+import StockEntryPage from './pages/StockEntryPage';
+import StockAddedPage from './pages/StockAddedPage';
 
 function App() {
     const isAdmin = localStorage.getItem('Role') === 'ADMIN';
 
     return (
+
         <Routes>
             <Route element={<ProtectedRoute />}>    
                 <Route element={<Mainlayout />}>
@@ -24,9 +27,11 @@ function App() {
                     <Route path='/stock-management' element={<StockManagementPage />} />
                     <Route path="/product-management" element={<ProductManagementPage />} />
                     <Route path='/statistics' element={<StatisticsPage />} />
-                    {isAdmin && (
-                        <Route path="/admin-panel" element={<AdminPanel />} />
-                    )}
+
+                    <Route path='/stock-entry' element={<StockEntryPage/>} />
+                    <Route path='/stock-added' element={<StockAddedPage/>} />
+                    
+                    <Route path="/admin-panel" element={<AdminPanel />}/>
                 </Route>
             </Route>
             

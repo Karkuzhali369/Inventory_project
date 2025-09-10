@@ -9,7 +9,8 @@ const Home = () => {
   useEffect(() => {
     const token = localStorage.getItem("Token");
 
-    fetch("https://inventory-project-d3mr.onrender.com/api/product/get-lowstock-count", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/get-lowstock-count`, {
+
       method: "GET",
       headers: {
         "Content-Type": "application/json",
