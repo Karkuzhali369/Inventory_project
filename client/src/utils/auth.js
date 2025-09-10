@@ -7,7 +7,9 @@ export async function isLoggedIn() {
   if (!token) return false;
 
   try {
+
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verify-token`, {
+
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

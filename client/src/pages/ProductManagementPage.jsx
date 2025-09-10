@@ -27,8 +27,10 @@ const ProductManagementPage = () => {
         setLoading(true);
         const token = localStorage.getItem("Token");
         try {
+
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/get-product?page=${page}&limit=${limit}&search=${search.trim()}&category=${selectedCategory}&sortBy=${sortBy}&order=${sortOrder}`, {
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+
         });
         const data = await res.json();
         setEndPage(data.data.paging.pages);
@@ -41,6 +43,7 @@ const ProductManagementPage = () => {
 
     useEffect(() => {
         const fetchCategory = async () => {
+
         const token = localStorage.getItem("Token");
         try {
             const res = await fetch('http://localhost:5000/api/product/get-category', {
@@ -49,6 +52,7 @@ const ProductManagementPage = () => {
             const data = await res.json();
             if (data.condition === "SUCCESS") setCategories(["ALL", ...data.data.categories]);
         } catch (err) { console.error(err); }
+
         };
         fetchCategory();
     }, []);
@@ -62,7 +66,7 @@ const ProductManagementPage = () => {
     const confirmDelete = async () => {
         const token = localStorage.getItem("Token");
         try {
-        const res = await fetch(`http://localhost:5000/api/product/delete-product`, {
+        const res = await fetch(`https://inventory-project-d3mr.onrender.com/api/product/delete-product`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             body: JSON.stringify({ productId: confirmModal.product._id }),
@@ -91,8 +95,10 @@ const ProductManagementPage = () => {
         minQuantity: parseInt(form.minQuantity.value),
         };
         const endpoint = isEditing
-        ? `http://localhost:5000/api/product/modify-product`
-        : `http://localhost:5000/api/product/add-product`;
+
+        ? `${import.meta.env.VITE_BACKEND_URL}/api/product/modify-product`
+        : `${import.meta.env.VITE_BACKEND_URL}/api/product/add-product`;
+
         const method = isEditing ? "PUT" : "POST";
         const body = isEditing ? { productId: selectedProduct._id, ...newProduct } : newProduct;
 

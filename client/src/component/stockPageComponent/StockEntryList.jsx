@@ -31,7 +31,9 @@ const StockEntryList = ({ setEntryListPopup }) => {
         });
         try {
             const token = localStorage.getItem('Token');
+
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/stock-entry`, {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -15,6 +15,7 @@ const Login = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 
+
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
@@ -27,6 +28,7 @@ const Login = () => {
 			});
 			const data = await response.json();
 			console.log(data);
+
 
 			if (response.ok) {
 				localStorage.setItem("Token", data.data.jwtToken);

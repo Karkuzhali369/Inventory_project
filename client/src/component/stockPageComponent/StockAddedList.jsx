@@ -33,7 +33,9 @@ const StockAddedList = ({ setAdditionListPopup }) => {
         });
         try {
             const token = localStorage.getItem('Token');
+
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/stock-addition`, {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

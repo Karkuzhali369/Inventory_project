@@ -11,7 +11,9 @@ function AdminPanel() {
   const fetchUsers = async () => {
     
     try {
+
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/get-all-users`, {
+
         headers: {
         Authorization: `Bearer ${token}`,
       }});
@@ -53,7 +55,9 @@ function AdminPanel() {
         payload.password = editedUser.password;
       }
 
+
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/update-user`, {
+
         method: "PUT",
         headers: { "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
@@ -97,7 +101,9 @@ function AdminPanel() {
   if (!confirmDelete) return;
 
   try {
+
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/delete-user`, {
+
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
