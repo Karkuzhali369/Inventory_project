@@ -28,7 +28,10 @@ const ProductCard = ({ product }) => {
                         <div>Make:<strong> {product.make}</strong></div>
                     )}
                     {
-                        <div>Price:<strong> ₹{product.price}</strong></div>
+                        <div>Cp:<strong> ₹{product.cp}</strong></div>
+                    }
+                    {
+                        <div>Sp:<strong> ₹{product.sp}</strong></div>
                     }
                 </div>
             </div>
