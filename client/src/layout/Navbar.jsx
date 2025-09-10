@@ -31,7 +31,7 @@ const Navbar = ({ toggleSideOpen }) => {
                     <button onClick={toggleSideOpen} className='mx-2 lg:hidden text-white text-2xl cursor-pointer' >☰</button>
                     <h1 className='text-2xl max-md:text-[14px] font-bold'>Balaram Electricals and Hardwares</h1>
                 </div>
-                <div className='text-sm md:text-base font-medium bg-blue-400 p-2 rounded-md drop-shadow-lg flex gap-4 justify-center items-center max-md:flex-col max-md:w-[8rem] max-md:gap-0'>
+                <div className='text-xs md:text-sm font-medium bg-blue-400 px-3 py-1 rounded-md shadow-sm flex flex-col items-center'>
                     <p>
                         {formattedDate} 
                     </p>

@@ -23,7 +23,7 @@ const Mainlayout = () => {
             </div>
 
 
-            <div className={`max-md:z-20 md:block overflow-y-hidden bg-white ${sideOpen ? 'max-md:fixed' : 'max-md:hidden'} max-md:h-[calc(100dvh-3.5rem)] max-md:bottom-0`}>
+            <div className={`max-md:z-20 md:block overflow-y-hidden bg-white ${sideOpen ? 'max-md:fixed' : 'max-md:hidden'} max-md:h-[calc(100dvh-4.5rem)] max-md:bottom-0 max-md:top-[4.5rem]`}>
 
                 <Sidebar />
             </div>
