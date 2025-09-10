@@ -451,3 +451,14 @@ export const getEntryLogsService = async ({ page = 1, limit = 10, stock }) => {
     return { status: 500, message: err.message };
   }
 };
+
+
+export const getRecordsService = async (logId) => {
+    try {
+        const records = await Record.find({logId: logId})
+        return { status: 200, message: 'Records fetched successfully.', records: records };
+    }
+    catch (err) {
+        return { status: 500, message: err.message };
+    }
+}
