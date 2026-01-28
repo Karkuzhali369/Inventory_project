@@ -46,7 +46,7 @@ const ProductManagementPage = () => {
 
         const token = localStorage.getItem("Token");
         try {
-            const res = await fetch('http://localhost:5000/api/product/get-category', {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/get-category`, {
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
@@ -66,7 +66,7 @@ const ProductManagementPage = () => {
     const confirmDelete = async () => {
         const token = localStorage.getItem("Token");
         try {
-        const res = await fetch(`https://inventory-project-d3mr.onrender.com/api/product/delete-product`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/delete-product`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             body: JSON.stringify({ productId: confirmModal.product._id }),

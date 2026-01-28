@@ -76,7 +76,7 @@ const StockManagementPage = () => {
     };
 
     const fetchCategory = async () => {
-        const response = await fetch('https://inventory-project-d3mr.onrender.com/api/product/get-category', {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/get-category`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
