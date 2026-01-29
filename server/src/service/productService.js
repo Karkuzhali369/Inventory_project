@@ -419,27 +419,65 @@ export const getLastThreeMonthsSales = async () => {
 
 export const getEntryLogsService = async ({ page = 1, limit = 10, stock }) => {
   try {
-    const query = {};
+    const matchStage = {};
+
     if (stock === "add") {
-      query.isAdded = true;
+      matchStage.isAdded = true;
     } else if (stock === "entry") {
-      query.isAdded = false;
+      matchStage.isAdded = false;
     }
 
     const skip = (page - 1) * limit;
 
-    
-    const logs = await Log.find(query)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(Number(limit));
+    const logs = await Log.aggregate([
+      { $match: matchStage },
 
-    const total = await Log.countDocuments(query);
+      // Group by DATE only (ignore time)
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$dateAndTime" }
+          },
+          totalProfit: { $sum: { $ifNull: ["$profit", 0] } },
+          totalProducts: { $sum: "$totalProducts" },
+          totalCost: { $sum: "$totalCost" }
+        }
+      },
+
+      // Format output
+      {
+        $project: {
+          _id: 0,
+          date: "$_id",
+          totalProfit: 1,
+          totalProducts: 1,
+          totalCost: 1
+        }
+      },
+
+      { $sort: { date: -1 } },
+      { $skip: skip },
+      { $limit: Number(limit) }
+    ]);
+
+    // Count total unique dates
+    const totalCount = await Log.aggregate([
+      { $match: matchStage },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$dateAndTime" } }
+        }
+      },
+      { $count: "total" }
+    ]);
+
+    const total = totalCount[0]?.total || 0;
+    // console.log(logs)
 
     return {
       status: 200,
-      message: "Logs fetched successfully",
-      data: logs, 
+      message: "Daily logs summary fetched successfully",
+      data: logs,
       pagination: {
         total,
         page: Number(page),
@@ -453,12 +491,25 @@ export const getEntryLogsService = async ({ page = 1, limit = 10, stock }) => {
 };
 
 
-export const getRecordsService = async (logId) => {
-    try {
-        const records = await Record.find({logId: logId})
-        return { status: 200, message: 'Records fetched successfully.', records: records };
-    }
-    catch (err) {
-        return { status: 500, message: err.message };
-    }
-}
+export const getRecordsService = async (dateString) => {
+  try {
+    // Convert "2026-01-28" → Date range
+    const start = new Date(dateString);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(dateString);
+    end.setHours(23, 59, 59, 999);
+
+    const records = await Record.find({
+      lastModified: { $gte: start, $lte: end }
+    }).sort({ lastModified: -1 });
+
+    return {
+      status: 200,
+      message: "Records fetched successfully.",
+      records,
+    };
+  } catch (err) {
+    return { status: 500, message: err.message };
+  }
+};

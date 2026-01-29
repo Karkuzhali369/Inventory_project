@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
+const StockModel = ({ date, setSelectedEntry }) => {
   const [products, setProducts] = useState([]);
 
   const currency = (n) => {
@@ -12,7 +12,7 @@ const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
     const token = localStorage.getItem("Token");
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/product/get-records?logid=${logId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/product/get-records?dateString=${date}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -21,7 +21,7 @@ const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
         }
       );
       const data = await res.json();
-      setProducts(data.data);
+      setProducts(data.data || []);
     } catch (err) {
       console.error("Failed to fetch records:", err);
     }
@@ -29,10 +29,25 @@ const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
 
   useEffect(() => {
     fetchRecord();
-  }, []);
+  }, [date]);
 
-  // Calculate grand total
-  const totalSold = products.reduce((sum, it) => {
+  // ✅ Group duplicate products by productId
+  const groupedProducts = Object.values(
+    products.reduce((acc, item) => {
+      const id = item.productId;
+
+      if (!acc[id]) {
+        acc[id] = { ...item };
+      } else {
+        acc[id].quantity += Number(item.quantity) || 0;
+      }
+
+      return acc;
+    }, {})
+  );
+
+  // ✅ Calculate grand total from grouped data
+  const totalSold = groupedProducts.reduce((sum, it) => {
     const qty = Number(it.quantity) || 0;
     const price = Number(it.unitPrice) || 0;
     return sum + qty * price;
@@ -46,15 +61,12 @@ const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
       role="dialog"
     >
       <div
-        className="bg-white w-[min(92vw,900px)] rounded-2xl shadow-2xl ring-1 ring-blue-200 p-0 overflow-hidden"
+        className="bg-white w-[min(92vw,900px)] rounded-2xl shadow-2xl ring-1 ring-blue-200 p-0 overflow-hidden relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header: Date + Entered by */}
+        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-red-200">
           <div className="font-semibold text-blue-800">Date: {date}</div>
-          <div className="text-blue-800 text-sm">
-            entered by: <span className="font-semibold">{enteredBy}</span>
-          </div>
         </div>
 
         {/* Table */}
@@ -72,8 +84,8 @@ const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-dashed divide-gray-300">
-                {(products.length > 0
-                  ? products
+                {(groupedProducts.length > 0
+                  ? groupedProducts
                   : [{ productName: "—", category: "—", quantity: 0, unitPrice: 0 }]
                 ).map((it, i) => {
                   const qty = Number(it.quantity) || 0;
@@ -81,7 +93,7 @@ const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
                   const rowTotal = qty * price;
 
                   return (
-                    <tr key={i} className="[&>td]:px-3 [&>td]:py-2">
+                    <tr key={it.productId || i} className="[&>td]:px-3 [&>td]:py-2">
                       <td>{i + 1}</td>
                       <td className="font-medium text-blue-900">{it.productName || "—"}</td>
                       <td>{it.category || "—"}</td>
@@ -95,9 +107,9 @@ const StockModel = ({ date, enteredBy, logId, setSelectedEntry }) => {
             </table>
           </div>
 
-          {/* Footer: Total sold */}
+          {/* Footer Total */}
           <div className="mt-4 text-right text-blue-900 font-semibold">
-            Total sold: <span className="ml-1">{currency(totalSold)}</span>
+            Total: <span className="ml-1">{currency(totalSold)}</span>
           </div>
         </div>
 

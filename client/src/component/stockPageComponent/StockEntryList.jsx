@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import SavingLoader from "../loading/SavingLoader";
 
 const StockEntryList = ({ setEntryListPopup }) => {
     const [productsInLs, setProductsInLs] = useState([]);
+
+    const [loading, setLoading] = useState(false);
 
     // On mount, get items from localStorage
     useEffect(() => {
@@ -31,6 +34,7 @@ const StockEntryList = ({ setEntryListPopup }) => {
         });
         try {
             const token = localStorage.getItem('Token');
+            setLoading(true);
 
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/stock-entry`, {
 
@@ -43,7 +47,8 @@ const StockEntryList = ({ setEntryListPopup }) => {
             });
 
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
+            setLoading(false);
 
             const stored = JSON.parse(localStorage.getItem('StockEntry')) || [];
 
@@ -62,7 +67,11 @@ const StockEntryList = ({ setEntryListPopup }) => {
             window.location.reload();
         }
         catch (error) {
+            setLoading(false);
             console.error("Error submitting stock entry:", error);
+        }
+        finally {
+            setLoading(false);
         }
 
     }
@@ -104,6 +113,9 @@ const StockEntryList = ({ setEntryListPopup }) => {
                 </button>
             </div>
         </div>
+
+        { loading && <SavingLoader /> }
+
         </div>
     );
 };

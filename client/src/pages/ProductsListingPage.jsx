@@ -34,7 +34,6 @@ const ProductsListingPage = () => {
 
         const data = await response.json();
         const newProducts = data.data.products;
-        console.log(newProducts);
         const pages = parseInt(data.data.paging.pages) || 1;
 
         if (reset) {
