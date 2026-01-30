@@ -22,16 +22,13 @@ const StockAddedPage = () => {
               }
             );
             const data = await res.json();
-            console.log(data);
     
             if (data.data && data.data.logs) {
               const mapped = data.data.logs.map((log) => ({
-                _id: log._id,
-                date: new Date(log.dateAndTime).toLocaleDateString(),
+                date: log.date,
                 totalProducts: log.totalProducts,
                 totalCost: log.totalCost,
-                profit: log.profit || 0,
-                enteredBy: log.author,
+                profit: log.totalProfit || 0,
                 items: [], // currently empty, or map if your backend sends item details
               }));
               setEntries(mapped);
@@ -62,9 +59,6 @@ const StockAddedPage = () => {
           >
             <div className="flex justify-between items-center mb-2">
               <span className="text-blue-600 font-semibold">{entry.date}</span>
-              <span className="text-sm font-medium text-red-400">
-                entered by: {entry.enteredBy}
-              </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 text-center gap-2">
@@ -83,7 +77,7 @@ const StockAddedPage = () => {
 
       {/* Modal */}
       {selectedEntry && (
-        <StockModel date={selectedEntry.date} enteredBy={selectedEntry.enteredBy} logId={selectedEntry._id} setSelectedEntry={setSelectedEntry} />
+        <StockModel date={selectedEntry.date} setSelectedEntry={setSelectedEntry} />
       )}
     </div>
     )

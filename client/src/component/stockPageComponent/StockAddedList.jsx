@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import SavingLoader from "../loading/SavingLoader";
 
 const StockAddedList = ({ setAdditionListPopup }) => {
     const [productsInLs, setProductsInLs] = useState([]);
+
+    const [loading, setLoading] = useState(false);
 
     // On mount, get items from localStorage
     useEffect(() => {
@@ -32,6 +35,7 @@ const StockAddedList = ({ setAdditionListPopup }) => {
             })
         });
         try {
+            setLoading(true);
             const token = localStorage.getItem('Token');
 
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/stock-addition`, {
@@ -44,13 +48,17 @@ const StockAddedList = ({ setAdditionListPopup }) => {
                 body: JSON.stringify(inp)
             })
             const data = await response.json();
+            setLoading(false);
             if(response.status) {
                 localStorage.setItem('StockAdd', JSON.stringify([]));
                 window.location.reload(true);
             }
         }
         catch(err) {
-
+            setLoading(false);
+        }
+        finally {
+            setLoading(false);
         }
     }
     return (
@@ -93,6 +101,7 @@ const StockAddedList = ({ setAdditionListPopup }) => {
                     </button>
                 </div>
             </div>
+            { loading && <SavingLoader /> }
         </div>
     );
 };

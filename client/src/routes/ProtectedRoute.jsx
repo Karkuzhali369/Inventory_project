@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { isLoggedIn } from "../utils/auth";
+import ConnectingLoader from "../component/loading/ConnectingLoader";
 
 const ProtectedRoute = () => {
   const [isAuth, setIsAuth] = useState(null); // null = still checking
@@ -14,7 +15,7 @@ const ProtectedRoute = () => {
 
   // Show a loader while checking authentication
   if (isAuth === null) {
-    return <div>Loading...</div>;
+    return <ConnectingLoader />;
   }
 
   // Not logged in → redirect to login

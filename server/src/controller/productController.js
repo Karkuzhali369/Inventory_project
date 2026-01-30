@@ -181,8 +181,8 @@ export const getEntryLogs = async (req, res) => {
 
 export const getRecords = async (req, res) => {
     try {
-        const { logid } = req.query;
-        const result = await getRecordsService(logid);
+        const { dateString } = req.query;
+        const result = await getRecordsService(dateString);
 
         if (result.status === 200) {
             return res.status(200).send(response("SUCCESS", result.message, result.records));
