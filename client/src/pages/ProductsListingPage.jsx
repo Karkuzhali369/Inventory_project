@@ -11,7 +11,7 @@ const ProductsListingPage = () => {
     const [search, setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('ALL');
     const [categories, setCategories] = useState([]);
-    const [sortBy, setSortBy] = useState("productName");
+    const [sortBy, setSortBy] = useState("code");
     const [sortOrder, setSortOrder] = useState('asc');
     const handleOrder = () => {
         if(sortOrder === 'asc') setSortOrder('desc');
@@ -120,6 +120,7 @@ const ProductsListingPage = () => {
                     onChange={(e) => setSortBy(e.target.value)}
                     className="cursor-pointer appearance-none border border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
                     >
+                        <option value="code">Code</option>
                     <option value="productName">Product Name</option>
                     <option value="currentQuantity">Quantity</option>
                     </select>
