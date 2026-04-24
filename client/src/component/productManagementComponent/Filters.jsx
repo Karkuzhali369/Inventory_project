@@ -20,6 +20,7 @@ const Filters = ({ search, setSearch, sortBy, setSortBy, sortOrder, handleOrder,
         onChange={(e) => setSortBy(e.target.value)}
         className="appearance-none border cursor-pointer border-gray-300 px-4 py-2 rounded-lg w-full pr-10 shadow-sm hover:shadow-md"
       >
+        <option value="code">Code</option>
         <option value="productName">Product Name</option>
         <option value="currentQuantity">Quantity</option>
       </select>

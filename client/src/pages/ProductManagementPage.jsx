@@ -10,7 +10,7 @@ const ProductManagementPage = () => {
     const [categories, setCategories] = useState(["ALL"]);
     const [selectedCategory, setSelectedCategory] = useState("ALL");
     const [search, setSearch] = useState("");
-    const [sortBy, setSortBy] = useState("productName");
+    const [sortBy, setSortBy] = useState("code");
     const [sortOrder, setSortOrder] = useState("asc");
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -22,6 +22,8 @@ const ProductManagementPage = () => {
     const [confirmModal, setConfirmModal] = useState({ open: false, product: null });
 
     const [endPage, setEndPage] = useState(0);
+
+    const [submitting, setSubmitting] = useState(false);
 
     const fetchProducts = async () => {
         setLoading(true);
@@ -78,38 +80,56 @@ const ProductManagementPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitting(true); // 🔥 start loading
+
         const token = localStorage.getItem("Token");
         const form = e.target;
-        const newProduct = {
-        code: parseInt(form.code.value),
-        productName: form.productName.value,
-        size: form.size.value || null,
-        category: form.category.value.toUpperCase(),
-        material: form.material.value || null,
-        make: form.make.value || null,
-        currentQuantity: parseInt(form.currentQuantity.value),
-        unit: form.unit.value,
-        cp: parseFloat(form.cp.value),
-        sp: parseFloat(form.sp.value),
-        dealer: form.dealer.value,
-        minQuantity: parseInt(form.minQuantity.value),
-        };
-        const endpoint = isEditing
 
-        ? `${import.meta.env.VITE_BACKEND_URL}/api/product/modify-product`
-        : `${import.meta.env.VITE_BACKEND_URL}/api/product/add-product`;
+        const newProduct = {
+            code: parseInt(form.code.value),
+            productName: form.productName.value,
+            size: form.size.value || null,
+            category: form.category.value.toUpperCase(),
+            material: form.material.value || null,
+            make: form.make.value || null,
+            currentQuantity: parseInt(form.currentQuantity.value),
+            unit: form.unit.value,
+            cp: parseFloat(form.cp.value),
+            sp: parseFloat(form.sp.value),
+            dealer: form.dealer.value,
+            minQuantity: parseInt(form.minQuantity.value),
+        };
+
+        const endpoint = isEditing
+            ? `${import.meta.env.VITE_BACKEND_URL}/api/product/modify-product`
+            : `${import.meta.env.VITE_BACKEND_URL}/api/product/add-product`;
 
         const method = isEditing ? "PUT" : "POST";
-        const body = isEditing ? { productId: selectedProduct._id, ...newProduct } : newProduct;
+        const body = isEditing
+            ? { productId: selectedProduct._id, ...newProduct }
+            : newProduct;
 
         try {
-        const res = await fetch(endpoint, {
-            method, headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify(body),
-        });
-        const result = await res.json();
-        if (result.condition === "SUCCESS") { setIsModalOpen(false); fetchProducts(); }
-        } catch (err) { console.error(err); }
+            const res = await fetch(endpoint, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(body),
+            });
+
+            const result = await res.json();
+
+            if (result.condition === "SUCCESS") {
+                setIsModalOpen(false);
+                fetchProducts();
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setSubmitting(false); // 🔥 stop loading
+        }
     };
 
     return (
@@ -156,9 +176,14 @@ const ProductManagementPage = () => {
         <DeleteConfirmationModal isOpen={confirmModal.open} onClose={() => setConfirmModal({ open: false, product: null })} onConfirm={confirmDelete} />
 
         <ProductFormModal
-            isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit}
-            selectedProduct={selectedProduct} isEditing={isEditing} categories={categories}
-        />
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    onSubmit={handleSubmit}
+    selectedProduct={selectedProduct}
+    isEditing={isEditing}
+    categories={categories}
+    submitting={submitting}   // ✅ add this
+/>
         </section>
     );
 };

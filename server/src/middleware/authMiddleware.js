@@ -3,6 +3,7 @@ import { response } from "../utils/response.js";
 import jwt from 'jsonwebtoken';
 
 export const verifyToken = async (req, res, next) => {
+    await new Promise(r => setTimeout(r, 2000));
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

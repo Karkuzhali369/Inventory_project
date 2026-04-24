@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
-const ProductFormModal = ({ isOpen, onClose, onSubmit, selectedProduct, isEditing, categories }) => {
+const ProductFormModal = ({ isOpen, onClose, onSubmit, selectedProduct, isEditing, categories, submitting }) => {
     const [categorySearch, setCategorySearch] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -103,8 +103,15 @@ const ProductFormModal = ({ isOpen, onClose, onSubmit, selectedProduct, isEditin
 
             <div className="flex justify-end space-x-3 pt-4">
                 <button type="button" onClick={onClose} className="px-5 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition cursor-pointer">Cancel</button>
-                <button type="submit" className="px-5 py-2 rounded-lg bg-blue-600 text-white shadow hover:bg-blue-700 active:scale-95 transition cursor-pointer">
-                {isEditing ? "Update Product" : "Add Product"}
+                <button
+                    type="submit"
+                    disabled={submitting}
+                    className={`px-5 py-2 rounded-lg text-white shadow transition cursor-pointer
+                    ${submitting ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 active:scale-95"}`}
+                >
+                    {submitting
+                        ? (isEditing ? "Updating..." : "Adding...")
+                        : (isEditing ? "Update Product" : "Add Product")}
                 </button>
             </div>
             </form>

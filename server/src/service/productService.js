@@ -8,6 +8,10 @@ import Record from '../model/recordModel.js';
 
 export const addProductService = async ({ code, productName, size=null, category, material=null, make=null, currentQuantity, unit, cp, sp, dealer, minQuantity }) => {
     try {
+        const existing = await Product.findOne({ code });
+        if(existing) {
+            return { status: 400, message: "Duplicate code" };
+        }
         const product = new Product({
             code,
             productName,
@@ -79,34 +83,47 @@ export const deleteProductService = async (productId) => {
     }
 }
 
-export const getProductsService = async ({ page = 1, limit = 30, search = "", category, sortBy = "createdAt", order = "desc" }) => {
+export const getProductsService = async ({
+    page = 1,
+    limit = 30,
+    search = "",
+    category,
+    sortBy = "code",
+    order = "asc"
+}) => {
     try {
         const query = {};
 
-        // Search by product name
+        // 🔍 Search
         if (search) {
-            query.productName = { $regex: search, $options: "i" }; // Case-insensitive search
+            const isNumber = !isNaN(search);
+
+            query.$or = [
+                { productName: { $regex: search, $options: "i" } }
+            ];
+
+            if (isNumber) {
+                query.$or.push({ code: Number(search) });
+            }
         }
 
-        // Filter by category
-        if (category && category != 'ALL') {
+        // 📂 Category filter
+        if (category && category !== 'ALL') {
             query.category = category;
         }
 
-        // Pagination
         const skip = (page - 1) * limit;
-
-        // Sorting
         const sortOrder = order === "asc" ? 1 : -1;
 
         const products = await Product.find(query)
-            .sort({ [sortBy]: sortOrder })
+            .sort({ [sortBy]: sortOrder }) // ✅ now valid
             .skip(skip)
             .limit(limit)
             .exec();
 
         const total = await Product.countDocuments(query);
 
+        console.log(products);
         return {
             status: 200,
             data: products,
@@ -116,8 +133,8 @@ export const getProductsService = async ({ page = 1, limit = 30, search = "", ca
                 pages: Math.ceil(total / limit),
             },
         };
-    }
-    catch (err) {
+
+    } catch (err) {
         return { status: 500, message: err.message };
     }
 };
